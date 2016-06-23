@@ -1,0 +1,6 @@
+certs/
+npm-debug.log
+node_modules/
+jquery.min.js
+config/index.js
+.idea/

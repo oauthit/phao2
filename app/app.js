@@ -1,7 +1,7 @@
 /*jslint node: true */
 'use strict';
 
-var config = require('./config');
+var config = require('./../config/index');
 var express = require('express');
 var passport = require('passport');
 var site = require('./site');
@@ -36,7 +36,7 @@ if (config.session.type === 'MongoStore') {
 
 //Pull in the mongo store if we're configured to use it
 //else pull in MemoryStore for the database configuration
-var db = require('./' + config.db.type);
+var db = require('../' + config.db.type);
 if (config.db.type === 'mongodb') {
   console.log('Using MongoDB for the data store');
 } else if (config.db.type === 'db') {
@@ -71,8 +71,8 @@ require('./auth');
 
 app.get('/', site.index);
 app.get('/login', site.loginForm);
-app.post('/confirmForm', site.confirmForm);
-app.post('/confirm', site.confirm);
+app.post('/mobileNumberProcessForm', site.mobileNumberProcessForm);
+app.post('/confirmSms', site.confirmSms);
 app.get('/logout', site.logout);
 app.get('/account', site.account);
 
@@ -112,10 +112,7 @@ setInterval(function () {
   });
 }, config.db.timeToCheckExpiredTokens * 1000);
 
-
 // Create our HTTPS server listening on port 3000.
 http.createServer(app).listen(3000, function () {
   console.log("OAuth 2.0 Authorization Server started on port 3000");
 });
-
-

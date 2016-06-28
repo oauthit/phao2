@@ -3,8 +3,8 @@
 'use strict';
 
 var passport = require('passport');
-var config = require('./config');
-var db = require('./' + config.db.type);
+var config = require('./../config/index');
+var db = require('../' + config.db.type);
 
 /**
  * This endpoint is for verifying a token.  This has the same signature to

@@ -6,10 +6,14 @@ var LocalStrategy = require('passport-local').Strategy;
 var BasicStrategy = require('passport-http').BasicStrategy;
 var ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy;
 var BearerStrategy = require('passport-http-bearer').Strategy;
-var config = require('./config');
-var db = require('./' + config.db.type);
-var rp = require('request-promise');
+var config = require('./../config/index');
+var db = require('../' + config.db.type);
 var debug = require('debug')('oauth2orize:authorization-server/auth');
+var stapi = require('./../stapi/abstract.model.js');
+var Account = stapi('account');
+var Login = stapi('login');
+var Client = stapi('client');
+var AccessToken = stapi('accessToken');
 
 /**
  * LocalStrategy
@@ -19,52 +23,40 @@ var debug = require('debug')('oauth2orize:authorization-server/auth');
  * a user is logged in before asking them to approve the request.
  */
 passport.use(new LocalStrategy({
-    usernameField: 'mobileNumberId',
+    usernameField: 'loginId',
     passwordField: 'code'
   },
-  function (mobileNumberId, code, done) {
-    console.log(mobileNumberId, code);
+  function (loginId, code, done) {
+    debug('code, loginId:', code, loginId);
 
-    return rp.get('http://localhost:9000/api/smsoauth/accesstoken/' + mobileNumberId, {
-      params: {
-        code: code
-      }
-    }).then(function (accessToken) {
+    // TODO: find login by id, validate code, get account by login.accountId, return account
 
-      accessToken = JSON.parse(accessToken);
-      debug('accessToken:', accessToken);
-      if (!accessToken) {
-        return done(null, false);
-      }
+    return Login().findById(loginId)
+      .then(function (login) {
+        debug('login:', login, code);
+        if (code != login.code) {
+          return done(null, false);
+        }
+        Account().findById(login.accountId)
+          .then(function (account) {
+            debug('account:', account);
+            if (!account) return done(null, false);
 
-      return rp.get('http://localhost:9000/api/smsoauth/account/' + accessToken.accountId)
-        .then(function (account) {
-          debug('account:', account);
-          return done(null, JSON.parse(account));
-        })
-        .catch(function (err) {
-          debug('error:', err);
-          done(err);
-        })
+            //console.log(JSON.parse(account));
+            return done(null, account);
+          })
+          .catch(function (err) {
+            debug('error:', err);
+            return done(err);
+          })
         ;
 
-    }).catch(function (err) {
-      debug('error:', err);
-      done(err);
-    });
-    //
-    //db.users.findByUsername(username, function (err, user) {
-    //  if (err) {
-    //    return done(err);
-    //  }
-    //  if (!user) {
-    //    return done(null, false);
-    //  }
-    //  if (user.password != password) {
-    //    return done(null, false);
-    //  }
-    //  return done(null, user);
-    //});
+      })
+      .catch(function (err) {
+        debug('error:', err);
+        return done(err);
+      })
+      ;
   }
 ));
 
@@ -82,18 +74,20 @@ passport.use(new LocalStrategy({
 passport.use(new BasicStrategy(
   function (username, password, done) {
     debug('basicStrategy:', username, password);
-    db.clients.findByClientId(username, function (err, client) {
-      if (err) {
+    Client.findById(username)
+      .then(function (client) {
+        if (!client) {
+          return done(null, false);
+        }
+        if (client.clientSecret != password) {
+          return done(null, false);
+        }
+        return done(null, client);
+      })
+      .catch(function (err) {
         return done(err);
-      }
-      if (!client) {
-        return done(null, false);
-      }
-      if (client.clientSecret != password) {
-        return done(null, false);
-      }
-      return done(null, client);
-    });
+      })
+    ;
   }
 ));
 
@@ -107,18 +101,20 @@ passport.use(new BasicStrategy(
 passport.use(new ClientPasswordStrategy(
   function (clientId, clientSecret, done) {
     debug('ClientPasswordStrategy:', clientId, clientSecret);
-    db.clients.findByClientId(clientId, function (err, client) {
-      if (err) {
+    Client.findById(username)
+      .then(function (client) {
+        if (!client) {
+          return done(null, false);
+        }
+        if (client.clientSecret != password) {
+          return done(null, false);
+        }
+        return done(null, client);
+      })
+      .catch(function (err) {
         return done(err);
-      }
-      if (!client) {
-        return done(null, false);
-      }
-      if (client.clientSecret != clientSecret) {
-        return done(null, false);
-      }
-      return done(null, client);
-    });
+      })
+    ;
   }
 ));
 
@@ -193,13 +189,17 @@ passport.use(new BearerStrategy(
 // the client by ID from the database.
 
 passport.serializeUser(function (user, done) {
-  debug('serializeUser:user', user);
+  debug('serializeUser:user', user.id);
   done(null, user.id);
 });
 
 passport.deserializeUser(function (id, done) {
-  db.users.find(id, function (err, user) {
-    debug('deserializedUser', id, user);
-    done(err, user);
-  });
+  Account().findById(id).then(function (user) {
+      debug('deserializedUser', id, user);
+      done(null, user);
+    })
+    .catch(function (err) {
+      debug('deserialize err:', err);
+      done(err);
+    });
 });

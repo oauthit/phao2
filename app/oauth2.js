@@ -7,10 +7,14 @@
 var oauth2orize = require('oauth2orize');
 var passport = require('passport');
 var login = require('connect-ensure-login');
-var config = require('./config');
-var db = require('./' + config.db.type);
+var config = require('./../config/index');
+var db = require('../' + config.db.type);
 var utils = require('./utils');
 var debug = require('debug')('oauth2orize:authorization-server/oauth2');
+var stapi = require('./../stapi/abstract.model.js');
+var AccessToken = stapi('accessToken');
+var AuthorizationCode = stapi('authorizationCode');
+var Client = stapi('client');
 
 // create OAuth 2.0 server
 var server = oauth2orize.createServer();
@@ -33,12 +37,20 @@ var server = oauth2orize.createServer();
  */
 server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, done) {
   var code = utils.uid(config.token.authorizationCodeLength);
-  db.authorizationCodes.save(code, client.id, redirectURI, user.id, client.scope, function (err) {
-    if (err) {
+  debug('grant code:', client, user, ares);
+  AuthorizationCode().save({
+      code: code,
+      clientId: client.id,
+      accountId: user.id,
+      redirectURI: redirectURI,
+      scope: client.scope
+    })
+    .then(function () {
+      return done(null, code);
+    })
+    .catch(function (err) {
       return done(err);
-    }
-    return done(null, code);
-  });
+    });
 }));
 
 /**
@@ -68,6 +80,7 @@ server.grant(oauth2orize.grant.token(function (client, user, ares, done) {
  * authorized the code.
  */
 server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, done) {
+  debug('exchange code:', client, code, redirectURI);
   db.authorizationCodes.find(code, function (err, authCode) {
     if (err) {
       return done(err);
@@ -168,6 +181,7 @@ server.exchange(oauth2orize.exchange.password(function (client, username, passwo
 server.exchange(oauth2orize.exchange.clientCredentials(function (client, scope, done) {
   var token = utils.uid(config.token.accessTokenLength);
   //Pass in a null for user id since there is no user when using this grant type
+  debug('exchange client credentials:', client, scope);
   db.accessTokens.save(token, config.token.calculateExpirationDate(), null, client.id, scope, function (err) {
     if (err) {
       return done(err);
@@ -184,6 +198,7 @@ server.exchange(oauth2orize.exchange.clientCredentials(function (client, scope, 
  * token on behalf of the client who authorized the code
  */
 server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken, scope, done) {
+  debug('exchange refreshToken:', client, refreshToken, scope);
   db.refreshTokens.find(refreshToken, function (err, authCode) {
     if (err) {
       return done(err);
@@ -223,37 +238,54 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
  */
 exports.authorization = [
   login.ensureLoggedIn(),
+  function (req,res,next) {
+    console.log('session:', req.session);
+    console.log('middleware');
+    next();
+  },
   server.authorization(function (clientID, redirectURI, scope, done) {
-    db.clients.findByClientId(clientID, function (err, client) {
-      debug('client:', client);
-      if (err) {
+    debug('server.authorization:', cliendID, redirectURI, scope);
+    console.log('server.authorization:', cliendID, redirectURI, scope);
+    Client().findById(clientID)
+      .then(function (client) {
+        debug('client:', client);
+
+        if (client) {
+          client.scope = scope;
+        }
+        // WARNING: For security purposes, it is highly advisable to check that
+        //          redirectURI provided by the client matches one registered with
+        //          the server.  For simplicity, this example does not.  You have
+        //          been warned.
+        return done(null, client, redirectURI);
+      })
+      .catch(function (err) {
+        debug('server.authorization err:', err);
         return done(err);
-      }
-      if (client) {
-        client.scope = scope;
-      }
-      // WARNING: For security purposes, it is highly advisable to check that
-      //          redirectURI provided by the client matches one registered with
-      //          the server.  For simplicity, this example does not.  You have
-      //          been warned.
-      return done(null, client, redirectURI);
-    });
+      })
+    ;
   }),
   function (req, res, next) {
     //Render the decision dialog if the client isn't a trusted client
     //TODO Make a mechanism so that if this isn't a trusted client, the user can recorded that they have consented
     //but also make a mechanism so that if the user revokes access to any of the clients then they will have to
     //re-consent.
-    db.clients.findByClientId(req.query.client_id, function (err, client) {
-      if (!err && client && client.trustedClient && client.trustedClient === true) {
-        //This is how we short call the decision like the dialog below does
-        server.decision({loadTransaction: false}, function (req, callback) {
-          callback(null, {allow: true});
-        })(req, res, next);
-      } else {
+    debug('authorization callback req.query.client_id:', req.query.client_id);
+    Client.findById(req.query.client_id)
+      .then(function (client) {
+        if (client && client.trustedClient && client.trustedClient === true) {
+          //This is how we short call the decision like the dialog below does
+          server.decision({loadTransaction: false}, function (req, callback) {
+            callback(null, {allow: true});
+          })(req, res, next);
+        } else {
+          res.render('dialog', {transactionID: req.oauth2.transactionID, user: req.user, client: req.oauth2.client});
+        }
+      })
+      .catch(function (err) {
         res.render('dialog', {transactionID: req.oauth2.transactionID, user: req.user, client: req.oauth2.client});
-      }
-    });
+      })
+    ;
   }
 ];
 
@@ -298,15 +330,18 @@ exports.token = [
 // the client by ID from the database.
 
 server.serializeClient(function (client, done) {
+  debug('serializeClient:', client);
   return done(null, client.id);
 });
 
 server.deserializeClient(function (id, done) {
-  db.clients.find(id, function (err, client) {
-    if (err) {
+  debug('deserializeClient:', id);
+  Client().findById(id)
+    .then(function (client) {
+      return done(null, JSON.parse(client));
+    })
+    .catch(function (err) {
       return done(err);
-    }
-    return done(null, client);
-  });
+    });
 });
 

@@ -14,7 +14,7 @@
 <body>
 
 <!-- HTML login screen form -->
-<form action="/confirm" method="post" class="pure-form pure-form-stacked">
+<form action="/confirmSms" method="post" class="pure-form pure-form-stacked">
   <fieldset>
     <!-- Upper box with Title, username, and password -->
     <div class="upper-box">
@@ -38,6 +38,7 @@
           <input class="pure-input-1 input-fields" id="code" type="number" placeholder="Code"
                  name="code"/>
           <input type="hidden" name="mobileNumberId" id="mobileNumberId" value="<%- mobileNumberId%>" />
+          <input type="hidden" name="loginId" id="loginId" value="<%- loginId%>" />
         </div>
       </div>
     </div>

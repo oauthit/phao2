@@ -4,7 +4,7 @@
 'use strict';
 
 var assert = require("assert");
-var app = require("../app.js");
+var app = require("../app/app.js");
 var request = require('request');
 var helper = require('./common').request;
 var validate = require('./common').validate;

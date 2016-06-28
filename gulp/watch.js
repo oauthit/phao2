@@ -11,7 +11,7 @@ gulp.task('watch', () => {
   var testFiles = _.union(paths.server.test.unit, paths.server.test.integration);
 
   plugins.livereload.listen({
-    port: process.env.LIVERELOAD_PORT || 35729
+    port: process.env.LIVERELOAD_PORT || 35555
   });
 
   plugins.watch(_.union(paths.server.scripts, testFiles))

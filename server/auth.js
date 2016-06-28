@@ -6,10 +6,10 @@ var LocalStrategy = require('passport-local').Strategy;
 var BasicStrategy = require('passport-http').BasicStrategy;
 var ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy;
 var BearerStrategy = require('passport-http-bearer').Strategy;
-var config = require('./../config/index');
+var config = require('./config/index');
 var db = require('../' + config.db.type);
 var debug = require('debug')('oauth2orize:authorization-server/auth');
-var stapi = require('./../stapi/abstract.model.js');
+var stapi = require('./stapi/abstract.model.js');
 var Account = stapi('account');
 var Login = stapi('login');
 var Client = stapi('client');
@@ -34,7 +34,7 @@ passport.use(new LocalStrategy({
     return Login().findById(loginId)
       .then(function (login) {
         debug('login:', login, code);
-        if (code != login.code) {
+        if (code !== login.code) {
           return done(null, false);
         }
         Account().findById(login.accountId)
@@ -79,7 +79,7 @@ passport.use(new BasicStrategy(
         if (!client) {
           return done(null, false);
         }
-        if (client.clientSecret != password) {
+        if (client.clientSecret !== password) {
           return done(null, false);
         }
         return done(null, client);
@@ -101,12 +101,12 @@ passport.use(new BasicStrategy(
 passport.use(new ClientPasswordStrategy(
   function (clientId, clientSecret, done) {
     debug('ClientPasswordStrategy:', clientId, clientSecret);
-    Client.findById(username)
+    Client.findById(clientId)
       .then(function (client) {
         if (!client) {
           return done(null, false);
         }
-        if (client.clientSecret != password) {
+        if (client.clientSecret !== clientSecret) {
           return done(null, false);
         }
         return done(null, client);

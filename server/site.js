@@ -7,10 +7,10 @@
 var passport = require('passport');
 var login = require('connect-ensure-login');
 var rp = require('request-promise');
-var config = require('./../config/index');
+var config = require('./config/index');
 var querystring = require('querystring');
 var url = require('url');
-var stapi = require('./../stapi/abstract.model.js');
+var stapi = require('./stapi/abstract.model.js');
 var Login = stapi('login');
 var Account = stapi('account');
 

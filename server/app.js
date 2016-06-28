@@ -1,7 +1,7 @@
 /*jslint node: true */
 'use strict';
 
-var config = require('./../config/index');
+var config = require('./config/index');
 var express = require('express');
 var passport = require('passport');
 var site = require('./site');

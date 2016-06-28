@@ -2,10 +2,8 @@
 
 let config, isBuild;
 
-const clientPath = require('../bower.json').appPath || 'client';
 const serverPath = 'server';
 export default {
-  clientPath: clientPath,
   serverPath: serverPath,
   config: config,
   isBuild: isBuild,

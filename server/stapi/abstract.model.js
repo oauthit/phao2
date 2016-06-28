@@ -3,7 +3,7 @@ var request = require('request');
 var _ = require('lodash');
 var debug = require('debug')('oauth2orize:abstract.model');
 var uuid = require('node-uuid');
-var config = require('../config');
+var config = require('../config/index');
 
 function model(name) {
 

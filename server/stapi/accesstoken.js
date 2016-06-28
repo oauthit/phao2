@@ -2,7 +2,7 @@
 /*global exports */
 'use strict';
 
-var stapi = require('./abstract.model');
+var stapi = require('./abstract.model.js');
 
 module.exports = stapi('accessToken');
 

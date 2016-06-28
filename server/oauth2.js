@@ -7,11 +7,11 @@
 var oauth2orize = require('oauth2orize');
 var passport = require('passport');
 var login = require('connect-ensure-login');
-var config = require('./../config/index');
+var config = require('./config/index');
 var db = require('../' + config.db.type);
 var utils = require('./utils');
 var debug = require('debug')('oauth2orize:authorization-server/oauth2');
-var stapi = require('./../stapi/abstract.model.js');
+var stapi = require('./stapi/abstract.model.js');
 var AccessToken = stapi('accessToken');
 var AuthorizationCode = stapi('authorizationCode');
 var Client = stapi('client');
@@ -238,14 +238,14 @@ server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken
  */
 exports.authorization = [
   login.ensureLoggedIn(),
-  function (req,res,next) {
+  function (req, res, next) {
     console.log('session:', req.session);
     console.log('middleware');
     next();
   },
   server.authorization(function (clientID, redirectURI, scope, done) {
-    debug('server.authorization:', cliendID, redirectURI, scope);
-    console.log('server.authorization:', cliendID, redirectURI, scope);
+    debug('server.authorization:', clientID, redirectURI, scope);
+    console.log('server.authorization:', clientID, redirectURI, scope);
     Client().findById(clientID)
       .then(function (client) {
         debug('client:', client);
@@ -271,7 +271,7 @@ exports.authorization = [
     //but also make a mechanism so that if the user revokes access to any of the clients then they will have to
     //re-consent.
     debug('authorization callback req.query.client_id:', req.query.client_id);
-    Client.findById(req.query.client_id)
+    Client().findById(req.query.client_id)
       .then(function (client) {
         if (client && client.trustedClient && client.trustedClient === true) {
           //This is how we short call the decision like the dialog below does
@@ -282,12 +282,13 @@ exports.authorization = [
           res.render('dialog', {transactionID: req.oauth2.transactionID, user: req.user, client: req.oauth2.client});
         }
       })
-      .catch(function (err) {
+      .catch(function () {
         res.render('dialog', {transactionID: req.oauth2.transactionID, user: req.user, client: req.oauth2.client});
       })
     ;
   }
-];
+]
+;
 
 /**
  * User decision endpoint

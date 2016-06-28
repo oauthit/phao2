@@ -2,7 +2,7 @@
 'use strict';
 
 var rp = require('request-promise');
-var config = require('../config/index');
+var config = require('./index');
 
 //The access tokens.
 //You will use these to access your end point data through the means outlined

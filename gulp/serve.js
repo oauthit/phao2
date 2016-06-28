@@ -81,11 +81,9 @@ gulp.task('gulp-reload', function () {
 });
 
 gulp.task('serve', cb => {
-  runSequence(['clean:tmp', 'constant'],
-    ['lint:scripts', 'inject', 'jade'],
-    ['wiredep:client'],
-    ['transpile:client', 'styles'],
-    ['env:all', 'start:server', 'start:client'],
+  runSequence('clean:tmp',
+    'lint:scripts',
+    ['env:all', 'start:server'],
     'watch',
     cb);
 });

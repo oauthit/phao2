@@ -2,8 +2,6 @@
 
 import gulp from 'gulp';
 import paths from './conf';
-import {protractor, webdriver_update} from 'gulp-protractor';
-import {Server as KarmaServer} from 'karma';
 import pipes from './reusablePipelines';
 import runSequence from 'run-sequence';
 
@@ -32,6 +30,3 @@ gulp.task('mocha:integration', () => {
   return gulp.src(paths.server.test.integration)
     .pipe(pipes.mocha());
 });
-
-// Downloads the selenium webdriver
-gulp.task('webdriver_update', webdriver_update);

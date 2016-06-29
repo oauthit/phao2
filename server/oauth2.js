@@ -49,6 +49,7 @@ server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, d
       return done(null, code);
     })
     .catch(function (err) {
+      debug('authorization code save:', err);
       return done(err);
     });
 }));
@@ -62,6 +63,7 @@ server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, d
  * which is bound to these values.
  */
 server.grant(oauth2orize.grant.token(function (client, user, ares, done) {
+  debug('grant token:', client, user, ares);
   var token = utils.uid(config.token.accessTokenLength);
   db.accessTokens.save(token, config.token.calculateExpirationDate(), user.id, client.id, client.scope, function (err) {
     if (err) {
@@ -300,6 +302,10 @@ exports.authorization = [
  */
 exports.decision = [
   login.ensureLoggedIn(),
+  function (req, res, next) {
+    debug('ensureLoggedIn req.session:', req.session);
+    next();
+  },
   server.decision()
 ];
 
@@ -339,9 +345,10 @@ server.deserializeClient(function (id, done) {
   debug('deserializeClient:', id);
   Client().findById(id)
     .then(function (client) {
-      return done(null, JSON.parse(client));
+      return done(null, client);
     })
     .catch(function (err) {
+      debug('deserializeClient catch:', err);
       return done(err);
     });
 });

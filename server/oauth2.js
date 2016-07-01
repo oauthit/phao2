@@ -43,7 +43,8 @@ server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, d
       clientId: client.id,
       accountId: user.id,
       redirectURI: redirectURI,
-      scope: client.scope
+      //TODO: add scope column to client
+      scope: client.scope || 'somescope'
     })
     .then(function () {
       return done(null, code);
@@ -83,53 +84,76 @@ server.grant(oauth2orize.grant.token(function (client, user, ares, done) {
  */
 server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, done) {
   debug('exchange code:', client, code, redirectURI);
-  db.authorizationCodes.find(code, function (err, authCode) {
-    if (err) {
-      return done(err);
+  AuthorizationCode().findOne({
+    params: {
+      code: code
     }
+  }).then(function (authCode) {
+    debug('authCode:', authCode);
     if (!authCode) {
       return done(null, false);
     }
-    if (client.id !== authCode.clientID) {
+    if (client.id !== authCode.clientId) {
       return done(null, false);
     }
     if (redirectURI !== authCode.redirectURI) {
       return done(null, false);
     }
-    db.authorizationCodes.delete(code, function (err, result) {
-      if (err) {
-        return done(err);
-      }
-      if (result !== undefined && result === 0) {
-        //This condition can result because of a "race condition" that can occur naturally when you're making
-        //two very fast calls to the authorization server to exchange authorization codes.  So, we check for
-        // the result and if it's not undefined and the result is zero, then we have already deleted the
-        // authorization code
-        return done(null, false);
-      }
-      var token = utils.uid(config.token.accessTokenLength);
-      db.accessTokens.save(token, config.token.calculateExpirationDate(), authCode.userID, authCode.clientID, authCode.scope, function (err) {
-        if (err) {
-          return done(err);
+    //TODO maybe delete by code?
+    AuthorizationCode().deleteById(authCode.id)
+      .then(function (result) {
+
+        debug('deleteById result:', result);
+        if (result !== undefined && result === 0) {
+          //This condition can result because of a "race condition" that can occur naturally when you're making
+          //two very fast calls to the authorization server to exchange authorization codes.  So, we check for
+          // the result and if it's not undefined and the result is zero, then we have already deleted the
+          // authorization code
+          return done(null, false);
         }
-        var refreshToken = null;
-        //I mimic openid connect's offline scope to determine if we send
-        //a refresh token or not
-        if (authCode.scope && authCode.scope.indexOf("offline_access") === 0) {
-          refreshToken = utils.uid(config.token.refreshTokenLength);
-          db.refreshTokens.save(refreshToken, authCode.userID, authCode.clientID, authCode.scope, function (err) {
-            if (err) {
-              return done(err);
-            }
+        var token = utils.uid(config.token.accessTokenLength);
+
+        //db.accessTokens.save(token, config.token.calculateExpirationDate(), authCode.userID, authCode.clientID, authCode.scope, function (err) {
+
+        //TODO save scope for access token?
+        AccessToken().save({
+          code: token,
+          accountId: authCode.accountId,
+          clientId: authCode.clientId,
+          expirationDate: config.token.calculateExpirationDate()
+        }).then(function (accessToken) {
+          var refreshToken = null;
+          //I mimic openid connect's offline scope to determine if we send
+          //a refresh token or not
+
+          //TODO: for now without scope and refresh tokens :(
+          if (authCode.scope && authCode.scope.indexOf("offline_access") === 0) {
+            refreshToken = utils.uid(config.token.refreshTokenLength);
+            db.refreshTokens.save(refreshToken, authCode.userID, authCode.clientID, authCode.scope, function (err) {
+              if (err) {
+                return done(err);
+              }
+              return done(null, token, refreshToken, {expires_in: config.token.expiresIn});
+            });
+          } else {
             return done(null, token, refreshToken, {expires_in: config.token.expiresIn});
-          });
-        } else {
-          return done(null, token, refreshToken, {expires_in: config.token.expiresIn});
-        }
+          }
+        }).catch(function (err) {
+          debug('accessToken save:', err);
+          return done(err);
+        });
+
+      })
+      .catch(function (err) {
+        debug('authorization code deleteById:', err);
+        return done(err);
       });
-    });
+  }).catch(function (err) {
+    debug('authorization code find one:', err);
+    return done(err);
   });
-}));
+}))
+;
 
 /**
  * Exchange user id and password for access tokens.

@@ -63,3 +63,9 @@ exports.session = {
 exports.stapi = {
   url: 'http://localhost:9000/api/smsoauth/'
 };
+
+exports.smsTrafficAPI = {
+  login: 'baros:sistemiumdpt:sistemiumdpt',
+  password: 'fcvuiad93',
+  originator: 'Sistemium'
+};

@@ -3,7 +3,13 @@
 
 var config = require('./config/index');
 var express = require('express');
+var passport = require('passport');
+var site = require('./site');
+var oauth2 = require('./oauth2');
+var token = require('./token');
 var http = require('http');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 var fs = require('fs');
 var expressSession = require("express-session");
 var path = require('path');
@@ -38,29 +44,41 @@ if (config.db.type === 'mongodb') {
   throw new Error("Within config/index.js the db.type is unknown: " + config.db.type);
 }
 
+// Express configuration
+var app = express();
+app.set('view engine', 'ejs');
+app.use(cookieParser());
+
+//Session Configuration
+app.use(expressSession({
+  saveUninitialized: true,
+  resave: true,
+  secret: config.session.secret,
+  store: sessionStorage,
+  key: "authorization.sid",
+  cookie: {maxAge: config.session.maxAge}
+}));
+
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Passport configuration
 require('./auth');
-var app = express();
 
-//From time to time we need to clean up any expired tokens
-//in the database
-setInterval(function () {
-  db.accessTokens.removeExpired(function (err) {
-    if (err) {
-      console.error("Error removing expired tokens");
-    }
-  });
-}, config.db.timeToCheckExpiredTokens * 1000);
+//static resources for stylesheets, images, javascript files
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Start server
-function startServer() {
-  http.createServer(app).listen(3000, function () {
-    console.log("OAuth 2.0 Authorization Server started on port 3000");
-  });
-}
+// Catch all for error messages.  Instead of a stack
+// trace, this will log the json of the error message
+// to the browser and pass along the status with it
+app.use(function (err, req, res, next) {
+  if (err) {
+    res.status(err.status);
+    res.json(err);
+  } else {
+    next();
+  }
+});
 
-setImmediate(startServer);
-
-// Expose app
-export default app;

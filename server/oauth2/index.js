@@ -7,11 +7,11 @@
 var oauth2orize = require('oauth2orize');
 var passport = require('passport');
 var login = require('connect-ensure-login');
-var config = require('./config/index');
-var db = require('../' + config.db.type);
-var utils = require('./utils');
+var config = require('../config/index');
+var db = require('../../' + config.db.type);
+var utils = require('../utils');
 var debug = require('debug')('oauth2orize:authorization-server/oauth2');
-var stapi = require('./stapi/abstract.model.js');
+var stapi = require('../stapi/abstract.model.js');
 var AccessToken = stapi('accessToken');
 var AuthorizationCode = stapi('authorizationCode');
 var Client = stapi('client');

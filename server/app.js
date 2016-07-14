@@ -42,6 +42,7 @@ if (config.db.type === 'mongodb') {
 // Passport configuration
 require('./auth');
 var app = express();
+require('./config/express')(app);
 
 //From time to time we need to clean up any expired tokens
 //in the database

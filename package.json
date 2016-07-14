@@ -15,6 +15,7 @@
     "ejs": "1.0.x",
     "express": "4.10.x",
     "express-session": "1.9.x",
+    "jade": "^1.11.0",
     "mongodb": "2.0.x",
     "oauth2orize": "1.0.x",
     "passport": "0.2.x",

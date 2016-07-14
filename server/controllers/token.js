@@ -2,7 +2,6 @@
 /*global exports */
 'use strict';
 
-var passport = require('passport');
 var config = require('./../config/index');
 var db = require('../' + config.db.type);
 

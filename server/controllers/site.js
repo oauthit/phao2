@@ -25,10 +25,16 @@ exports.index = function (req, res) {
 
 exports.loginForm = function (req, res) {
   console.log(req.session);
-  var url_parts = url.parse(req.session.returnTo, true);
-  var query = url_parts.query;
+  if (req.session.returnTo) {
+    var url_parts = url.parse(req.session.returnTo, true);
+    var query = url_parts.query;
 
-  res.render('login', {clientId: query.client_id});
+    return res.render('login', {clientId: query.client_id});
+  }
+  else {
+    return res.render('login');
+  }
+
 };
 
 //TODO refactor this controller it is too bloated
@@ -57,8 +63,8 @@ exports.mobileNumberProcessForm = function (req, res) {
   };
 
   return Account(req).findOne({
-      mobileNumber: req.body.mobileNumber
-    })
+    mobileNumber: req.body.mobileNumber
+  })
     .then(function (account) {
       console.log(account);
       if (account) {
@@ -67,12 +73,12 @@ exports.mobileNumberProcessForm = function (req, res) {
             console.log('Got sms!!!', response);
 
             return Login(req).save({
-                code: smsCode,
-                expiresAt: expiresAt,
-                attempts: 0,
-                clientId: req.body.clientId,
-                accountId: account.id
-              })
+              code: smsCode,
+              expiresAt: expiresAt,
+              attempts: 0,
+              clientId: req.body.clientId,
+              accountId: account.id
+            })
               .then(function (response) {
                 console.log('response:', response);
                 return res.render('confirm', {

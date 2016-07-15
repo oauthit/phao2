@@ -1,0 +1,22 @@
+doctype html
+html
+    head
+        title SmS OAUTH Register
+        meta(name='viewport', content='width=device-width, initial-scale=1.0')
+        link(rel='stylesheet', type='text/css', href='stylesheets/pure-min.css')
+        link(rel='stylesheet', type='text/css', href='stylesheets/base.css')
+        link(rel='stylesheet', type='text/css', href='stylesheets/sign-in-modules.css')
+    body
+        form.pure-form.pure-form-stacked(action='/registerForm', method='post')
+            fieldset
+                .upper-box
+                    div
+                        h1.title-padding Authorization Server
+                    .pure-control-group
+                        label.labels(for='mobileNumber') Mobile Number:
+                        .input-fields
+                            input#mobileNumber.pure-input-1.input-fields(type='text', placeholder='Mobile Number', name='mobileNumber')
+                    .pure-control-group
+                .bottom-box
+                    .pure-controls.sign-in-button
+                        button.pure-button.pure-button-primary(type='submit', value='Submit') Register

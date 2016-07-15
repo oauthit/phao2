@@ -1,12 +1,11 @@
-Authorization Server
-==================
+SMS Authorization Server
+========================
 
-This is the authorization server example.
+This is the sms authorization server.
+
 
 # Installation
 ```
-git clone https://github.com/FrankHassanabad/Oauth2orizeRecipes.git
-cd Oauth2orizeRecipes/authorization-server
 npm install
 node app.js
 ```

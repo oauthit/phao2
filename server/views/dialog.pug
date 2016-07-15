@@ -1,0 +1,29 @@
+extends ./layout.pug
+
+block title
+    title OAuth2Orize Recipes Decision
+    link(rel='stylesheet', type='text/css', href='../stylesheets/dialog-modules.css')
+block body
+    form.pure-form.pure-form-stacked(action='/dialog/authorize/decision', method='post')
+        input(name='transaction_id', type='hidden', value=transactionID)
+        fieldset
+            .upper-box
+                div
+                    .main-text Decision
+                    .subtext Authorization Server
+                .pure-control-group.labels
+                    p
+                    p
+                    |  The application
+                    b
+                    |  is requesting access to your account.
+                    p Do you approve?
+                    p
+            .bottom-box
+                .pure-controls.accept-cancel-buttons
+                    div
+                        input#allow.pure-button.pure-button-primary(type='submit', value='Accept')
+                        |
+                        span &amp;nbsp&amp;nbsp
+                        |
+                        input#deny.pure-button(type='submit', value='Deny', name='cancel')

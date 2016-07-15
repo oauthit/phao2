@@ -3,7 +3,7 @@
 'use strict';
 
 var config = require('./../config/index');
-var db = require('../' + config.db.type);
+var db = require('../../' + config.db.type);
 
 /**
  * This endpoint is for verifying a token.  This has the same signature to

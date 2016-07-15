@@ -19,6 +19,9 @@ gulp.task('watch', () => {
     .pipe(pipes.lintServerScripts())
     .pipe(plugins.livereload());
 
+  plugins.watch(paths.server.views)
+    .pipe(plugins.livereload());
+
   gulp.watch(testFiles, ['test:server']);
   gulp.watch('gulpfile.js', ['gulp-reload']);
 });

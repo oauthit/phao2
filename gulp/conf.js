@@ -13,7 +13,8 @@ export default {
     test: {
       integration: [`${serverPath}/**/*.integration.js`, 'mocha.global.js'],
       unit: [`${serverPath}/**/*.spec.js`, 'mocha.global.js']
-    }
+    },
+    views: [`${serverPath}/**/*.pug`]
   },
   karma: 'karma.conf.js',
   dist: 'dist'

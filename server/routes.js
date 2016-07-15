@@ -6,7 +6,7 @@ var user = require('./controllers/user');
 var client = require('./controllers/client');
 var token = require('./controllers/token');
 var site = require('./controllers/site');
-var oauth2 = require('../oauth2');
+var oauth2 = require('./oauth2');
 
 'use strict';
 
@@ -32,7 +32,6 @@ export default function(app) {
 // Mimicking google's token info endpoint from
 // https://developers.google.com/accounts/docs/OAuth2UserAgent#validatetoken
   app.get('/api/tokeninfo', token.info);
-  app.use('/auth', require('./auth'));
 
   // All undefined asset or api routes should return a 404
   app.route('/:url(api|auth|components|app|bower_components|assets)/*')
@@ -41,6 +40,7 @@ export default function(app) {
   // All other routes should redirect to the index.html
   app.route('/*')
     .get((req, res) => {
+      console.log('all others:', req);
       res.sendFile(path.resolve(app.get('appPath') + '/index.html'));
     });
 }

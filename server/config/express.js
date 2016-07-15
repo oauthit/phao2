@@ -12,7 +12,6 @@ var fs = require('fs');
 var expressSession = require("express-session");
 var path = require('path');
 
-
 export default function(app) {
 //Pull in the mongo store if we're configured to use it
 //else pull in MemoryStore for the session configuration
@@ -45,7 +44,11 @@ export default function(app) {
   }
 
 // Express configuration
-  app.set('view engine', 'jade');
+  var env = app.get('env');
+  config.root = path.normalize(__dirname + '/../..');
+
+  app.set('views', config.root + '/server/views');
+  app.set('view engine', 'pug');
   app.use(cookieParser());
 
 //Session Configuration
@@ -66,8 +69,8 @@ export default function(app) {
 // Passport configuration
   require('../auth');
 
-//static resources for stylesheets, images, javascript files
-  app.use(express.static(path.join(__dirname, 'public')));
+  app.use(express.static(path.join(config.root, 'server/public')));
+
 
 // Catch all for error messages.  Instead of a stack
 // trace, this will log the json of the error message

@@ -23,7 +23,7 @@ exports.token = {
   authorizationCodeLength: 16,
   accessTokenLength: 256,
   refreshTokenLength: 256
-};
+};3000
 
 /**
  * Database configuration for access and refresh tokens.
@@ -67,5 +67,11 @@ exports.stapi = {
 exports.smsTrafficAPI = {
   login: 'baros:sistemiumdpt:sistemiumdpt',
   password: 'fcvuiad93',
-  originator: 'Sistemium'
+  originator: 'Sistemium',
+  uri: 'https://api.smstraffic.ru/multi.php'
+};
+
+
+exports.express = {
+  port: 3000
 };

@@ -5,12 +5,12 @@ var config = require('./config/index');
 var express = require('express');
 var http = require('http');
 var fs = require('fs');
-var expressSession = require("express-session");
-var path = require('path');
 
 
 // Passport configuration
 require('./auth');
+
+// Express configuration
 var app = express();
 require('./config/express')(app);
 require('./routes')(app);
@@ -27,8 +27,8 @@ setInterval(function () {
 
 // Start server
 function startServer() {
-  http.createServer(app).listen(3000, function () {
-    console.log("OAuth 2.0 Authorization Server started on port 3000");
+  http.createServer(app).listen(config.express.port, function () {
+    console.log("OAuth 2.0 Authorization Server started on port ", config.express.port);
   });
 }
 

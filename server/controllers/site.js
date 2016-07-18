@@ -13,7 +13,6 @@ var url = require('url');
 var stapi = require('./../stapi/abstract.model.js');
 var Login = stapi('login');
 var Account = stapi('account');
-var rp = require('request-promise');
 
 exports.index = function (req, res) {
   if (!req.query.code) {
@@ -40,7 +39,7 @@ exports.loginForm = function (req, res) {
 function sendSms(req, smsCode) {
   let options = {
     method: 'POST',
-    uri: 'https://api.smstraffic.ru/multi.php',
+    uri: config.smsTrafficAPI.uri,
     form: {
       login: config.smsTrafficAPI.login,
       password: config.smsTrafficAPI.password,

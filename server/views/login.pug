@@ -1,16 +1,19 @@
 extends ./layout.pug
 
+block scripts
+  link(rel='stylesheet', type='text/css', href='stylesheets/sign-in-modules.css')
+
 block body
-    form.pure-form.pure-form-stacked(action='/mobileNumberProcessForm', method='post')
-        fieldset
-            .upper-box
-                div
-                    h1.title-padding Authorization Server
-                .pure-control-group
-                    label.labels(for='mobileNumber') Mobile Number:
-                    .input-fields
-                        input#mobileNumber.pure-input-1.input-fields(type='text', placeholder='Mobile Number', name='mobileNumber')
-                        input#clientId(type='hidden', name='clientId', value=clientId)
-            .bottom-box
-                .pure-controls.sign-in-button
-                    button.pure-button.pure-button-primary(type='submit', value='Submit') Send code
+  form.pure-form.pure-form-stacked(action='/mobileNumberProcessForm', method='post')
+    fieldset
+      .upper-box
+        div
+          h1.title-padding Authorization Server
+        .pure-control-group
+          label.labels(for='mobileNumber') Mobile Number:
+          .input-fields
+            input#mobileNumber.pure-input-1.input-fields(type='text', placeholder='Mobile Number', name='mobileNumber')
+            input#clientId(type='hidden', name='clientId', value=clientId)
+      .bottom-box
+        .pure-controls.sign-in-button
+          button.pure-button.pure-button-primary(type='submit', value='Submit') Send code

@@ -37,15 +37,7 @@ exports.loginForm = function (req, res) {
 
 };
 
-//TODO refactor this controller it is too bloated
-exports.mobileNumberProcessForm = function (req, res) {
-  console.log(req.body);
-
-  //generate sms code
-  const smsCode = Math.floor(Math.random() * (9999 - 1000) + 1000);
-  const expiresAt = new Date(Date.now() + 60 * 1000 * 5);
-
-  //todo send sms
+function sendSms(req, smsCode) {
   let options = {
     method: 'POST',
     uri: 'https://api.smstraffic.ru/multi.php',
@@ -62,48 +54,95 @@ exports.mobileNumberProcessForm = function (req, res) {
     }
   };
 
+  return rp(options);
+}
+
+function saveLogin(req, res, login) {
+  return Login(req).save({
+    code: login.smsCode,
+    expiresAt: login.expiresAt,
+    attempts: 0,
+    clientId: req.body.clientId,
+    accountId: login.accountId
+  })
+    .then(function (response) {
+      console.log('response:', response);
+      return res.render('confirm', {
+        mobileNumber: req.body.mobileNumber,
+        mobileNumberId: login.accountId,
+        loginId: response.id
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+      return res.sendStatus(500);
+    });
+}
+
+//TODO refactor this controller it is too bloated
+exports.mobileNumberProcessForm = function (req, res) {
+  console.log(req.body);
+
+  //generate sms code
+  const smsCode = Math.floor(Math.random() * (9999 - 1000) + 1000);
+  const expiresAt = new Date(Date.now() + 60 * 1000 * 5);
+
+  //todo send sms
+
+
   return Account(req).findOne({
     mobileNumber: req.body.mobileNumber
   })
     .then(function (account) {
       console.log(account);
       if (account) {
-        return rp(options)
+        return sendSms(req, smsCode)
           .then((response) => {
             console.log('Got sms!!!', response);
 
-            return Login(req).save({
-              code: smsCode,
+            let login = {
+              smsCode: smsCode,
               expiresAt: expiresAt,
-              attempts: 0,
-              clientId: req.body.clientId,
               accountId: account.id
-            })
-              .then(function (response) {
-                console.log('response:', response);
-                return res.render('confirm', {
-                  mobileNumber: req.body.mobileNumber,
-                  mobileNumberId: account.id,
-                  loginId: response.id
-                });
-              })
-              .catch(function (err) {
-                console.log(err);
-                return res.sendStatus(500);
-              });
-
+            };
+            saveLogin(req, res, login);
           })
           .catch((err) => {
             debug('sms sending err:', err);
           });
       } else {
-        return res.render('register');
+        return res.render('register', {mobileNumber: req.body.mobileNumber});
       }
     }).catch(function (err) {
       console.log(err);
       return res.send(500);
     });
-}
+};
+
+exports.registerProcessForm = function (req, res) {
+  //create account
+  //then send code
+  //render registerConfirm form
+  Account(req).create({
+    name: req.body.name,
+    mobileNumber: req.body.mobileNumber
+  }).then((response) => {
+    //generate sms code
+    const smsCode = Math.floor(Math.random() * (9999 - 1000) + 1000);
+
+    sendSms(req, smsCode).then((response) => {
+      debug('response:', response);
+      console.log('Got sms!!', response);
+
+      let login = {
+
+      };
+    })
+  }).catch((err) => {
+
+  })
+
+};
 
 exports.confirmSms = [
   passport.authenticate('local', {successReturnToOrRedirect: '/', failureRedirect: '/login'})

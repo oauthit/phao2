@@ -23,7 +23,7 @@ exports.token = {
   authorizationCodeLength: 16,
   accessTokenLength: 256,
   refreshTokenLength: 256
-};3000
+};
 
 /**
  * Database configuration for access and refresh tokens.

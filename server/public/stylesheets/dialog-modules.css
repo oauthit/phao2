@@ -93,7 +93,7 @@
  * It's currently anchored to the fieldset and that's causing issues.
  */
 .main-text {
-  padding-left: 100px;
+  /*padding-left: 100px;*/
   padding-top: 20px;
   font-size: 180%;
   color: #505050;
@@ -108,7 +108,7 @@
  * It's currently anchored to the fieldset and that's causing issues.
  */
 .subtext {
-  padding-left: 80px;
+  /*padding-left: 80px;*/
   font-size: 110%;
   color: #969696;
   text-shadow: 2px 1px 3px rgba(230, 230, 230, 0.42);

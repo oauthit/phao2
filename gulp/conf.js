@@ -8,7 +8,7 @@ export default {
   config: config,
   isBuild: isBuild,
   server: {
-    scripts: [`${serverPath}/**/!(*.spec|*.integration).js`],
+    scripts: [`${serverPath}/**/!(*.spec|*.integration|jquery.min).js`],
     json: [`${serverPath}/**/*.json`],
     test: {
       integration: [`${serverPath}/**/*.integration.js`, 'mocha.global.js'],

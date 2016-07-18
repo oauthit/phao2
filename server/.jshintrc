@@ -12,5 +12,6 @@
   "smarttabs": true,
   "asi": false,
   "debug": true,
-  "noyield": true
+  "noyield": true,
+  "-W064": false
 }

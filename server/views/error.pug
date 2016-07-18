@@ -1,0 +1,20 @@
+extends ./layout.pug
+
+block title
+  title Error
+  link(rel='stylesheet', type='text/css', href='/stylesheets/dialog-modules.css')
+block body
+  form.pure-form.pure-form-stacked(action='/login', method='get')
+    fieldset
+      .upper-box
+        div
+          .main-text Error
+          .subtext Authorization Server
+        .pure-control-group.labels
+          p The application
+          b encountered an error
+          p #{text}
+      .bottom-box
+        .pure-controls.accept-cancel-buttons
+          div
+            input#allow.pure-button.pure-button-primary(type='submit', value='Go to login')

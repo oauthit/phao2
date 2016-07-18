@@ -1,18 +1,25 @@
 extends ./layout.pug
 
+
 block scripts
   link(rel='stylesheet', type='text/css', href='stylesheets/sign-in-modules.css')
 
 block body
+  - var placeHolder = 'Mobile Number'
+  if error
+    - var placeHolder = error
+    - var mobileNumberStyle = 'border-color: red'
+  else
+    - var placeHolder = 'Mobile Number'
   form.pure-form.pure-form-stacked(action='/mobileNumberProcessForm', method='post')
     fieldset
       .upper-box
         div
-          h1.title-padding Authorization Server
+          h1.title-padding SMS Authorization
         .pure-control-group
           label.labels(for='mobileNumber') Mobile Number:
           .input-fields
-            input#mobileNumber.pure-input-1.input-fields(type='text', placeholder='Mobile Number', name='mobileNumber')
+            input#mobileNumber.pure-input-1.input-fields(style=mobileNumberStyle, type='text', placeholder=placeHolder, name='mobileNumber')
             input#clientId(type='hidden', name='clientId', value=clientId)
       .bottom-box
         .pure-controls.sign-in-button

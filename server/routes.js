@@ -19,6 +19,9 @@ export default function(app) {
   app.get('/login', site.loginForm);
   app.post('/mobileNumberProcessForm', site.mobileNumberProcessForm);
   app.post('/confirmSms', site.confirmSms);
+
+  app.get('/register', site.registerForm);
+  app.post('/registerProcessForm', site.registerProcessForm);
   app.get('/logout', site.logout);
   app.get('/account', site.account);
 
@@ -40,7 +43,7 @@ export default function(app) {
   // All other routes should redirect to the index.html
   app.route('/*')
     .get((req, res) => {
-      console.log('all others:', req);
+      console.log('all others!');
       res.sendFile(path.resolve(app.get('appPath') + '/index.html'));
     });
 }

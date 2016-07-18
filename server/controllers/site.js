@@ -13,6 +13,7 @@ var url = require('url');
 var stapi = require('./../stapi/abstract.model.js');
 var Login = stapi('login');
 var Account = stapi('account');
+var debug = require('debug')('site');
 
 exports.index = function (req, res) {
   if (!req.query.code) {
@@ -22,16 +23,23 @@ exports.index = function (req, res) {
   }
 };
 
+
+exports.registerForm = function (req, res) {
+  return res.render('register');
+};
+
 exports.loginForm = function (req, res) {
-  console.log(req.session);
+
+  console.log('loginForm session:', req.session);
+
+  // TODO find where returnTo is defined
   if (req.session.returnTo) {
     var url_parts = url.parse(req.session.returnTo, true);
     var query = url_parts.query;
 
     return res.render('login', {clientId: query.client_id});
-  }
-  else {
-    return res.render('login');
+  } else {
+    return res.render('error', {text: 'returnTo undefined'});
   }
 
 };
@@ -57,6 +65,8 @@ function sendSms(req, smsCode) {
 }
 
 function saveLogin(req, res, login) {
+  console.log('login:', login);
+
   return Login(req).save({
     code: login.smsCode,
     expiresAt: login.expiresAt,
@@ -78,40 +88,65 @@ function saveLogin(req, res, login) {
     });
 }
 
-//TODO refactor this controller it is too bloated
-exports.mobileNumberProcessForm = function (req, res) {
-  console.log(req.body);
-
+function accountLogin(req, res, account) {
   //generate sms code
   const smsCode = Math.floor(Math.random() * (9999 - 1000) + 1000);
   const expiresAt = new Date(Date.now() + 60 * 1000 * 5);
 
-  //todo send sms
+  let tester = /authcode=/g.test(account.info);
 
+  let login = {
+    smsCode: smsCode,
+    expiresAt: expiresAt,
+    accountId: account.id
+  };
+
+  if (tester) {
+    return saveLogin(req, res, login);
+  }
+
+  return sendSms(req, smsCode)
+    .then((response) => {
+      console.log('Got sms!!!', response);
+      return Account(req).update(login.accountId, {
+        info: 'authcode=' + smsCode
+      }).then((response) => {
+        console.log('response:', response);
+        return saveLogin(req, res, login);
+      }).catch(err => {
+        return res.render('error', {error: err});
+      });
+    })
+    .catch((err) => {
+      debug('sms sending err:', err);
+    });
+}
+
+//TODO refactor this controller it is too bloated
+exports.mobileNumberProcessForm = function (req, res) {
+  console.log('loginForm session:', req.session);
+  console.log('mobileNumberProcessForm body:', req.body);
+
+  if (!req.body.mobileNumber) {
+    return res.render('login', {
+      error: 'Mobile Number is required'
+    });
+  }
 
   return Account(req).findOne({
     mobileNumber: req.body.mobileNumber
   })
     .then(function (account) {
       console.log(account);
-      if (account) {
-        return sendSms(req, smsCode)
-          .then((response) => {
-            console.log('Got sms!!!', response);
 
-            let login = {
-              smsCode: smsCode,
-              expiresAt: expiresAt,
-              accountId: account.id
-            };
-            saveLogin(req, res, login);
-          })
-          .catch((err) => {
-            debug('sms sending err:', err);
-          });
+      if (account) {
+        return accountLogin(req, res, account);
       } else {
-        return res.render('register', {mobileNumber: req.body.mobileNumber});
+        //TODO for now just error that mobileNumber incorrect
+        return res.render('error', {error: 'No such mobile number registered...'});
+        // return res.render('register', {mobileNumber: req.body.mobileNumber});
       }
+
     }).catch(function (err) {
       console.log(err);
       return res.send(500);
@@ -120,26 +155,57 @@ exports.mobileNumberProcessForm = function (req, res) {
 
 exports.registerProcessForm = function (req, res) {
   //create account
-  //then send code
-  //render registerConfirm form
-  Account(req).create({
-    name: req.body.name,
+  //then login
+
+  Account(req).find({
     mobileNumber: req.body.mobileNumber
   }).then((response) => {
-    //generate sms code
-    const smsCode = Math.floor(Math.random() * (9999 - 1000) + 1000);
+    console.log('find account by mobileNumber:', response);
+    if (response) {
+      let account = response[0];
+      console.log('registerProcessForm account:', account);
+      return accountLogin(req, res, account).then((response) => {
+        console.log(response);
+        res.render('confirm', {
+          mobileNumber: req.body.mobileNumber,
+          mobileNumberId: response.accountId,
+          loginId: response.id
+        });
+      });
+    } else {
+      Account(req).save({
+        name: req.body.name,
+        mobileNumber: req.body.mobileNumber
+      }).then((account) => {
+        console.log('registerProcessForm account:', account);
+        console.log(account);
+        return accountLogin(req, res, account).then((response) => {
+          console.log(response);
+          res.render('confirm', {
+            mobileNumber: req.body.mobileNumber,
+            mobileNumberId: response.accountId,
+            loginId: response.id
+          });
+        });
+      }).catch((err) => {
+        // TODO: report an error
+        console.error(err);
+        //res.sendStatus(500);
 
-    sendSms(req, smsCode).then((response) => {
-      debug('response:', response);
-      console.log('Got sms!!', response);
+        if (err.text) {
+          return res.render('register', {
+            mobileNumber: req.body.mobileNumber,
+            name: req.body.name,
+            error: err.text
+          });
+        }
 
-      let login = {
-
-      };
-    })
+      });
+    }
   }).catch((err) => {
-
-  })
+    console.error(err);
+    res.sendStatus(500);
+  });
 
 };
 

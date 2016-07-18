@@ -17,13 +17,13 @@ require('./routes')(app);
 
 //From time to time we need to clean up any expired tokens
 //in the database
-setInterval(function () {
-  db.accessTokens.removeExpired(function (err) {
-    if (err) {
-      console.error("Error removing expired tokens");
-    }
-  });
-}, config.db.timeToCheckExpiredTokens * 1000);
+// setInterval(function () {
+//   db.accessTokens.removeExpired(function (err) {
+//     if (err) {
+//       console.error("Error removing expired tokens");
+//     }
+//   });
+// }, config.db.timeToCheckExpiredTokens * 1000);
 
 // Start server
 function startServer() {

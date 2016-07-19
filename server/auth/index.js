@@ -143,7 +143,8 @@ passport.use(new BearerStrategy(
             return done(err);
           });
       } else {
-        if (token.userID !== null) {
+        debug('token:', token);
+        if (token.accountId !== null) {
           Account().findById(token.accountId)
             .then(function (user) {
 
@@ -176,7 +177,8 @@ passport.use(new BearerStrategy(
             .catch(function (err) {
               debug('client findById error:', err);
               return done(err);
-            });
+            })
+          ;
         }
       }
     }).catch(function (err) {

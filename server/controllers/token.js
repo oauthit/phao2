@@ -4,6 +4,10 @@
 
 var config = require('./../config/index');
 var db = require('../../' + config.db.type);
+var stapi = require('../stapi/abstract.model.js');
+var AccessToken = stapi('accessToken');
+var Client = stapi('client');
+var debug = require('debug')('oauth2orize:authorization-server/server/controllers/token.js');
 
 /**
  * This endpoint is for verifying a token.  This has the same signature to
@@ -26,8 +30,8 @@ var db = require('../../' + config.db.type);
 exports.info = [
   function (req, res) {
     if (req.query.access_token) {
-      db.accessTokens.find(req.query.access_token, function (err, token) {
-        if (err || !token) {
+      AccessToken(req).findById(req.query.access_token).then(function (token) {
+        if (!token) {
           res.status(400);
           res.json({error: "invalid_token"});
         } else if (new Date() > token.expirationDate) {
@@ -35,13 +39,15 @@ exports.info = [
           res.json({error: "invalid_token"});
         }
         else {
-          db.clients.find(token.clientID, function (err, client) {
-            if (err || !client) {
+          debug('token:', token);
+          Client(req).findById(token.clientId).then(function (client) {
+            if (!client) {
               res.status(400);
               res.json({error: "invalid_token"});
             } else {
               if (token.expirationDate) {
-                var expirationLeft = Math.floor((token.expirationDate.getTime() - new Date().getTime()) / 1000);
+                var expirationDate = new Date(token.expirationDate + 'Z');
+                var expirationLeft = Math.floor((expirationDate.getTime() - new Date().getTime()) / 1000);
                 if (expirationLeft <= 0) {
                   res.json({error: "invalid_token"});
                 } else {
@@ -51,8 +57,16 @@ exports.info = [
                 res.json({audience: client.clientId});
               }
             }
+          }).catch(err => {
+            console.log('error:', err);
+            res.status(400);
+            res.json({error: 'invalid_token'});
           });
         }
+      }).catch(err => {
+        console.log('error:', err);
+        res.status(400);
+        res.json({error: 'invalid_token'});
       });
     } else {
       res.status(400);

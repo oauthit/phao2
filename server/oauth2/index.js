@@ -192,7 +192,7 @@ exports.authorization = [
     debug('authorization callback req.query.client_id:', req.query.client_id);
     Client().findById(req.query.client_id)
       .then(function (client) {
-        if (client && client.trustedClient && client.trustedClient === true) {
+        if (client && client.isTrusted && client.isTrusted === true) {
           //This is how we short call the decision like the dialog below does
           server.decision({loadTransaction: false}, function (req, callback) {
             callback(null, {allow: true});
@@ -202,7 +202,11 @@ exports.authorization = [
         }
       })
       .catch(function () {
-        res.render('dialog', {transactionID: req.oauth2.transactionID, user: req.user, client: req.oauth2.client});
+        res.render('dialog', {
+          transactionID: req.oauth2.transactionID,
+          user: req.user,
+          client: req.oauth2.client
+        });
       })
     ;
   }

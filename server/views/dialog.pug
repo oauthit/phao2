@@ -12,8 +12,12 @@ block body
           .main-text Decision
           .subtext Authorization Server
         .pure-control-group.labels
-          p The application
-          b is requesting access to your account.
+          p
+            span The application
+            = ' '
+            b #{client.name}
+            = ' '
+            span is requesting access to your account.
           p Do you approve?
       .bottom-box
         .pure-controls.accept-cancel-buttons

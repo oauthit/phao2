@@ -7,7 +7,7 @@ var db = require('../../' + config.db.type);
 var stapi = require('../stapi/abstract.model.js');
 var AccessToken = stapi('accessToken');
 var Client = stapi('client');
-var debug = require('debug')('oauth2orize:authorization-server/server/controllers/token.js');
+var debug = require('debug')('oauth2orize:controllers:token');
 
 /**
  * This endpoint is for verifying a token.  This has the same signature to
@@ -29,8 +29,9 @@ var debug = require('debug')('oauth2orize:authorization-server/server/controller
  */
 exports.info = [
   function (req, res) {
+    debug(req.query);
     if (req.query.access_token) {
-      AccessToken(req).findById(req.query.access_token).then(function (token) {
+      AccessToken(req).findOne({code: req.query.access_token}).then(function (token) {
         if (!token) {
           res.status(400);
           res.json({error: "invalid_token"});

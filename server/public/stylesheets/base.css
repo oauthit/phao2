@@ -40,5 +40,7 @@ pre {
 }
 
 .pure-button.button-warning {
-  background: rgb(223, 117, 20);
+  color: #fff;
+  background-color: #f0ad4e;
+  border-color: #f0ad4e
 }

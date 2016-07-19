@@ -5,3 +5,4 @@ jquery.min.js
 config/index.js
 .idea/
 /server/config/index.js
+dist

@@ -55,24 +55,6 @@ server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, d
     });
 }));
 
-/**
- * Grant implicit authorization.
- *
- * The callback takes the `client` requesting authorization, the authenticated
- * `user` granting access, and their response, which contains approved scope,
- * duration, etc. as parsed by the application.  The application issues a token,
- * which is bound to these values.
- */
-server.grant(oauth2orize.grant.token(function (client, user, ares, done) {
-  debug('grant token:', client, user, ares);
-  var token = utils.uid(config.token.accessTokenLength);
-  db.accessTokens.save(token, config.token.calculateExpirationDate(), user.id, client.id, client.scope, function (err) {
-    if (err) {
-      return done(err);
-    }
-    return done(null, token, {expires_in: config.token.expiresIn});
-  });
-}));
 
 /**
  * Exchange authorization codes for access tokens.
@@ -154,96 +136,6 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
   });
 }))
 ;
-
-/**
- * Exchange user id and password for access tokens.
- *
- * The callback accepts the `client`, which is exchanging the user's name and password
- * from the token request for verification. If these values are validated, the
- * application issues an access token on behalf of the user who authorized the code.
- */
-server.exchange(oauth2orize.exchange.password(function (client, username, password, scope, done) {
-  //Validate the user
-  db.users.findByUsername(username, function (err, user) {
-    if (err) {
-      return done(err);
-    }
-    if (!user) {
-      return done(null, false);
-    }
-    if (password !== user.password) {
-      return done(null, false);
-    }
-    var token = utils.uid(config.token.accessTokenLength);
-    db.accessTokens.save(token, config.token.calculateExpirationDate(), user.id, client.id, scope, function (err) {
-      if (err) {
-        return done(err);
-      }
-      var refreshToken = null;
-      //I mimic openid connect's offline scope to determine if we send
-      //a refresh token or not
-      if (scope && scope.indexOf("offline_access") === 0) {
-        refreshToken = utils.uid(config.token.refreshTokenLength);
-        db.refreshTokens.save(refreshToken, user.id, client.id, scope, function (err) {
-          if (err) {
-            return done(err);
-          }
-          return done(null, token, refreshToken, {expires_in: config.token.expiresIn});
-        });
-      } else {
-        return done(null, token, refreshToken, {expires_in: config.token.expiresIn});
-      }
-    });
-  });
-}));
-
-/**
- * Exchange the client id and password/secret for an access token.
- *
- * The callback accepts the `client`, which is exchanging the client's id and
- * password/secret from the token request for verification. If these values are validated, the
- * application issues an access token on behalf of the client who authorized the code.
- */
-server.exchange(oauth2orize.exchange.clientCredentials(function (client, scope, done) {
-  var token = utils.uid(config.token.accessTokenLength);
-  //Pass in a null for user id since there is no user when using this grant type
-  debug('exchange client credentials:', client, scope);
-  db.accessTokens.save(token, config.token.calculateExpirationDate(), null, client.id, scope, function (err) {
-    if (err) {
-      return done(err);
-    }
-    return done(null, token, null, {expires_in: config.token.expiresIn});
-  });
-}));
-
-/**
- * Exchange the refresh token for an access token.
- *
- * The callback accepts the `client`, which is exchanging the client's id from the token
- * request for verification.  If this value is validated, the application issues an access
- * token on behalf of the client who authorized the code
- */
-server.exchange(oauth2orize.exchange.refreshToken(function (client, refreshToken, scope, done) {
-  debug('exchange refreshToken:', client, refreshToken, scope);
-  db.refreshTokens.find(refreshToken, function (err, authCode) {
-    if (err) {
-      return done(err);
-    }
-    if (!authCode) {
-      return done(null, false);
-    }
-    if (client.id !== authCode.clientID) {
-      return done(null, false);
-    }
-    var token = utils.uid(config.token.accessTokenLength);
-    db.accessTokens.save(token, config.token.calculateExpirationDate(), authCode.userID, authCode.clientID, authCode.scope, function (err) {
-      if (err) {
-        return done(err);
-      }
-      return done(null, token, null, {expires_in: config.token.expiresIn});
-    });
-  });
-}));
 
 /**
  * User authorization endpoint

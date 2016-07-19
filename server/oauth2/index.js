@@ -95,8 +95,6 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
         }
         var token = utils.uid(config.token.accessTokenLength);
 
-        //db.accessTokens.save(token, config.token.calculateExpirationDate(), authCode.userID, authCode.clientID, authCode.scope, function (err) {
-
         //TODO save scope for access token?
         AccessToken().save({
           code: token,

@@ -38,3 +38,7 @@ pre {
   margin-top: 0px;
   margin-bottom: 0px;
 }
+
+.pure-button.button-warning {
+  background: rgb(223, 117, 20);
+}

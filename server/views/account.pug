@@ -13,19 +13,19 @@ block body
         .pure-control-group
           label.labels(for='name') Name:
           .input-fields
-            input#name.pure-input-1.input-fields(type='text', placeholder='User name', value=user.name, disabled)
+            input#name.pure-input-1.input-fields(type='text', placeholder='User name', value=user.name, readonly)
         .pure-control-group
           label.labels(for='mobileNumber') Mobile Number:
           .input-fields
-            input#mobileNumber.pure-input-1.input-fields(type='text', value=user.mobileNumber, placeholder='Mobile Number', disabled)
+            input#mobileNumber.pure-input-1.input-fields(type='text', value=user.mobileNumber, placeholder='Mobile Number', readonly)
         .pure-control-group
           label.labels(for='email') E-mail:
           .input-fields
-            input#email.pure-input-1.input-fields(type='text', value=user.email, placeholder='E-mail', disabled)
+            input#email.pure-input-1.input-fields(type='text', value=user.email, placeholder='E-mail', readonly)
         .pure-control-group
           label.labels(for='info') Other info:
           .input-fields
-            input#info.pure-input-1.input-fields(type='text', value=user.info, placeholder='Other info', disabled)
+            input#info.pure-input-1.input-fields(type='text', value=user.info, placeholder='Other info', readonly)
       .bottom-box
         .pure-controls.sign-in-button
-          button.pure-button.pure-button-primary(type='submit', value='Submit') Logout
+          button.pure-button.button-warning(type='submit', value='Submit') Logout

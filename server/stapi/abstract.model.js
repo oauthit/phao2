@@ -73,13 +73,14 @@ function model(name) {
           //},
           json: body
         }, function (err, res, json) {
-          debug(res.statusCode, json);
-          var e = err || res.statusCode !== 200 && json;
-          if (e) {
-            e = res.statusCode !== 201 && json;
+          debug('save', res.statusCode, json);
+          var e = err;
+
+          if (!e && [200,201].indexOf(res.statusCode) < 0) {
+            e = json || `Error saving "${name}"`;
           }
-          debug('save', e);
-          e && reject(e) || resolve(json);
+
+          return e ? reject(e) : resolve(json);
         });
 
       });

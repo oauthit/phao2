@@ -3,7 +3,6 @@
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var BasicStrategy = require('passport-http').BasicStrategy;
 var ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy;
 var BearerStrategy = require('passport-http-bearer').Strategy;
 var debug = require('debug')('oauth2orize:authorization-server/auth');
@@ -25,7 +24,7 @@ passport.use(new LocalStrategy({
     passwordField: 'code'
   },
   function (loginId, code, done) {
-    debug('code, loginId:', code, loginId);
+    debug('LocalStrategy code:', code, 'loginId:', loginId);
 
     // TODO: find login by id, validate code, get account by login.accountId, return account
 
@@ -33,7 +32,9 @@ passport.use(new LocalStrategy({
       .then(function (login) {
         debug('login:', login, code);
         if (code !== login.code) {
-          return done(null, false);
+          return done(null, false, {
+            text: 'Wrong SMS code'
+          });
         }
         Account().findById(login.accountId)
           .then(function (account) {

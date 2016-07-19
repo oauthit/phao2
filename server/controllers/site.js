@@ -13,7 +13,7 @@ var url = require('url');
 var stapi = require('./../stapi/abstract.model.js');
 var Login = stapi('login');
 var Account = stapi('account');
-var debug = require('debug')('site');
+var debug = require('debug')('oauth2orize:controller:site');
 
 exports.index = function (req, res) {
   if (!req.query.code) {
@@ -33,14 +33,13 @@ exports.loginForm = function (req, res) {
   console.log('loginForm session:', req.session);
 
   // TODO find where returnTo is defined
-  if (req.session.returnTo) {
-    var url_parts = url.parse(req.session.returnTo, true);
-    var query = url_parts.query;
-
-    return res.render('login', {clientId: query.client_id});
-  } else {
-    return res.render('error', {text: 'returnTo undefined'});
+  if (!req.session.returnTo) {
+    req.session.returnTo = '/account';
   }
+  var url_parts = url.parse(req.session.returnTo, true);
+  var query = url_parts.query;
+
+  return res.render('login', {clientId: query.client_id});
 
 };
 
@@ -107,18 +106,14 @@ function accountLogin(req, res, account) {
 
   return sendSms(req, smsCode)
     .then((response) => {
-      console.log('Got sms!!!', response);
-      return Account(req).update(login.accountId, {
-        info: 'authcode=' + smsCode
-      }).then((response) => {
-        console.log('response:', response);
-        return saveLogin(req, res, login);
-      }).catch(err => {
-        return res.render('error', {error: err});
-      });
+      debug('sms success', response);
+      // TODO add smsResponse to Login table
+      login.smsResponse = response;
+      return saveLogin(req, res, login);
     })
     .catch((err) => {
-      debug('sms sending err:', err);
+      debug('sms error', err);
+      return res.render('error', {text: 'Error sending SMS'});
     });
 }
 
@@ -211,9 +206,44 @@ exports.registerProcessForm = function (req, res) {
 
 };
 
-exports.confirmSms = [
-  passport.authenticate('local', {successReturnToOrRedirect: '/', failureRedirect: '/login'})
-];
+exports.confirmSms = function(req, res, next) {
+
+  passport.authenticate('local', {badRequestMessage: 'SMS code is required'}, function (err, user, errInfo) {
+
+    if (err) {
+      debug ('confirmSms err', err);
+      return next(err);
+    }
+
+    if (!user) {
+      debug ('confirmSms !user', errInfo);
+      return res.render('confirm', {
+        mobileNumber: req.body.mobileNumber,
+        mobileNumberId: req.body.mobileNumberId,
+        loginId: req.body.loginId,
+        error: errInfo.text || errInfo.message
+      });
+    }
+
+    req.logIn(user,{successReturnToOrRedirect: '/', failureRedirect: '/login'},function(err) {
+      debug('confirmSms req.logIn error', err);
+      if (err) {
+        return next(err);
+      } else {
+        let nextUrl = '/account';
+
+        if (req.session && req.session.returnTo) {
+          nextUrl = req.session.returnTo;
+          delete req.session.returnTo;
+        }
+        debug ('confirmSms', nextUrl);
+        return res.redirect(nextUrl);
+      }
+    });
+
+  })(req, res, next);
+
+};
 
 exports.logout = function (req, res) {
   req.logout();

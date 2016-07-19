@@ -1,3 +1,31 @@
-p Username: #{user.username}
-p Name: #{user.name}
+extends ./layout.pug
 
+block title
+  title SMS Auth Profile
+  link(rel='stylesheet', type='text/css', href='/stylesheets/sign-in-modules.css')
+
+block body
+  form.pure-form.pure-form-stacked(action='/logout', method='get')
+    fieldset
+      .upper-box
+        div
+          h1.title-padding User Profile
+        .pure-control-group
+          label.labels(for='name') Name:
+          .input-fields
+            input#name.pure-input-1.input-fields(type='text', placeholder='User name', value=user.name, disabled)
+        .pure-control-group
+          label.labels(for='mobileNumber') Mobile Number:
+          .input-fields
+            input#mobileNumber.pure-input-1.input-fields(type='text', value=user.mobileNumber, placeholder='Mobile Number', disabled)
+        .pure-control-group
+          label.labels(for='email') E-mail:
+          .input-fields
+            input#email.pure-input-1.input-fields(type='text', value=user.email, placeholder='E-mail', disabled)
+        .pure-control-group
+          label.labels(for='info') Other info:
+          .input-fields
+            input#info.pure-input-1.input-fields(type='text', value=user.info, placeholder='Other info', disabled)
+      .bottom-box
+        .pure-controls.sign-in-button
+          button.pure-button.pure-button-primary(type='submit', value='Submit') Logout

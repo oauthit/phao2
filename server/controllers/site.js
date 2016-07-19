@@ -127,14 +127,16 @@ exports.mobileNumberProcessForm = function (req, res) {
   console.log('loginForm session:', req.session);
   console.log('mobileNumberProcessForm body:', req.body);
 
-  if (!req.body.mobileNumber) {
+  let mobileNumber = req.body.mobileNumber;
+
+  if (!mobileNumber) {
     return res.render('login', {
       error: 'Mobile Number is required'
     });
   }
 
   return Account(req).findOne({
-    mobileNumber: req.body.mobileNumber
+    mobileNumber: mobileNumber
   })
     .then(function (account) {
       console.log(account);
@@ -143,7 +145,7 @@ exports.mobileNumberProcessForm = function (req, res) {
         return accountLogin(req, res, account);
       } else {
         //TODO for now just error that mobileNumber incorrect
-        return res.render('error', {error: 'No such mobile number registered...'});
+        return res.render('error', {text: `The number ${mobileNumber} is not registered`});
         // return res.render('register', {mobileNumber: req.body.mobileNumber});
       }
 

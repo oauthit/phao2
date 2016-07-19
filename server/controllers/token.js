@@ -3,7 +3,6 @@
 'use strict';
 
 var config = require('./../config/index');
-var db = require('../../' + config.db.type);
 var stapi = require('../stapi/abstract.model.js');
 var AccessToken = stapi('accessToken');
 var Client = stapi('client');
@@ -34,23 +33,23 @@ exports.info = [
       AccessToken(req).findOne({code: req.query.access_token}).then(function (token) {
         if (!token) {
           res.status(400);
-          res.json({error: "invalid_token"});
+          res.json({error: 'invalid_token'});
         } else if (new Date() > token.expirationDate) {
           res.status(400);
-          res.json({error: "invalid_token"});
+          res.json({error: 'invalid_token'});
         }
         else {
           debug('token:', token);
           Client(req).findById(token.clientId).then(function (client) {
             if (!client) {
               res.status(400);
-              res.json({error: "invalid_token"});
+              res.json({error: 'invalid_token'});
             } else {
               if (token.expirationDate) {
                 var expirationDate = new Date(token.expirationDate + 'Z');
                 var expirationLeft = Math.floor((expirationDate.getTime() - new Date().getTime()) / 1000);
                 if (expirationLeft <= 0) {
-                  res.json({error: "invalid_token"});
+                  res.json({error: 'invalid_token'});
                 } else {
                   res.json({audience: client.clientId, expires_in: expirationLeft});
                 }
@@ -71,7 +70,7 @@ exports.info = [
       });
     } else {
       res.status(400);
-      res.json({error: "invalid_token"});
+      res.json({error: 'invalid_token'});
     }
   }
 ];

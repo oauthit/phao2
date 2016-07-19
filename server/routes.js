@@ -31,9 +31,6 @@ export default function(app) {
 
   app.get('/api/userinfo', user.info);
   app.get('/api/clientinfo', client.info);
-
-// Mimicking google's token info endpoint from
-// https://developers.google.com/accounts/docs/OAuth2UserAgent#validatetoken
   app.get('/api/tokeninfo', token.info);
 
   // All undefined asset or api routes should return a 404
@@ -42,8 +39,5 @@ export default function(app) {
 
   // All other routes should redirect to the index.html
   app.route('/*')
-    .get((req, res) => {
-      console.log('all others!');
-      res.sendFile(path.resolve(app.get('appPath') + '/index.html'));
-    });
+    .get(errors[404]);
 }

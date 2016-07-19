@@ -9,44 +9,32 @@ var http = require('http');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
-var expressSession = require("express-session");
+var expressSession = require('express-session');
 var path = require('path');
 
 export default function (app) {
-//Pull in the mongo store if we're configured to use it
-//else pull in MemoryStore for the session configuration
+
   var sessionStorage;
-  if (config.session.type === 'MongoStore') {
-    var MongoStore = require('connect-mongo')({session: expressSession});
-    console.log('Using MongoDB for the Session');
-    sessionStorage = new MongoStore({
-      db: config.session.dbName
-    });
-  } else if (config.session.type === 'MemoryStore') {
+
+  if (config.session.type === 'MemoryStore') {
+  
     var MemoryStore = expressSession.MemoryStore;
+  
     console.log('Using MemoryStore for the Session');
     sessionStorage = new MemoryStore();
+  
   } else if (config.session.type === 'RedisStore') {
+    
     var RedisStore = require('connect-redis')(expressSession);
     var redisConfig = config.redis;
     console.log('Using RedisStore for the Session');
     sessionStorage = new RedisStore(redisConfig);
+    
   } else {
     //We have no idea here
-    throw new Error("Within config/index.js the session.type is unknown: " + config.session.type);
+    throw new Error('Within config/index.js the session.type is unknown: ' + config.session.type);
   }
-
-//Pull in the mongo store if we're configured to use it
-//else pull in MemoryStore for the database configuration
-  var db = require('../../' + config.db.type);
-  if (config.db.type === 'mongodb') {
-    console.log('Using MongoDB for the data store');
-  } else if (config.db.type === 'db') {
-    console.log('Using MemoryStore for the data store');
-  } else {
-    //We have no idea here
-    throw new Error("Within config/index.js the db.type is unknown: " + config.db.type);
-  }
+  
 
 // Express configuration
   var env = app.get('env');
@@ -62,7 +50,7 @@ export default function (app) {
     resave: true,
     secret: config.session.secret,
     store: sessionStorage,
-    key: "authorization.sid",
+    key: 'authorization.sid',
     cookie: {maxAge: config.session.maxAge}
   }));
 
@@ -88,4 +76,5 @@ export default function (app) {
       next();
     }
   });
+  
 }

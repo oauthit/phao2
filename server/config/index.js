@@ -27,43 +27,15 @@ exports.token = {
   refreshTokenLength: 256
 };
 
-/**
- * Database configuration for access and refresh tokens.
- *
- * timeToCheckExpiredTokens - The time in seconds to check the database
- * for expired access tokens.  For example, if it's set to 3600, then that's
- * one hour to check for expired access tokens.
- * type - The type of database to use.  "db" for "in-memory", or
- * "mongodb" for the mongo database store.
- * dbName - The database name to use.
- */
-exports.db = {
-  timeToCheckExpiredTokens: 3600,
-  type: "db",
-  dbName: "OAuth2orizeRecipeTokens"
-};
 
-/**
- * Session configuration
- *
- * type - The type of session to use.  MemoryStore for "in-memory",
- * or MongoStore for the mongo database store
- * maxAge - The maximum age in milliseconds of the session.  Use null for
- * web browser session only.  Use something else large like 3600000 * 24 * 7 * 52
- * for a year.
- * secret - The session secret that you should change to what you want
- * dbName - The database name if you're using Mongo
- */
 exports.session = {
   type: 'RedisStore',
   maxAge: 3600000 * 24 * 7 * 52,
-  //TODO You need to change this secret to something that you choose for your secret
-  secret: "A Secret That Should Be Changed",
-  dbName: "Session"
+  secret: env.SESSION_SECRET || 'A Secret That Should Be Changed'
 };
 
 exports.stapi = {
-  url: 'http://localhost:9000/api/smsoauth/'
+  url: env.STAPI || 'http://localhost:9000/api/smsoauth/'
 };
 
 exports.smsTrafficAPI = {

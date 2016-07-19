@@ -15,18 +15,16 @@ var Login = stapi('login');
 var Account = stapi('account');
 var debug = require('debug')('oauth2orize:controller:site');
 
+
 exports.index = function (req, res) {
-  if (!req.query.code) {
-    res.render('index');
-  } else {
-    res.render('index-with-code');
-  }
+  res.render('index');
 };
 
 
 exports.registerForm = function (req, res) {
   return res.render('register');
 };
+
 
 exports.loginForm = function (req, res) {
 
@@ -42,6 +40,7 @@ exports.loginForm = function (req, res) {
   return res.render('login', {clientId: query.client_id});
 
 };
+
 
 function sendSms(req, smsCode) {
   let options = {
@@ -62,6 +61,7 @@ function sendSms(req, smsCode) {
 
   return rp(options);
 }
+
 
 function saveLogin(req, res, login) {
   console.log('login:', login);
@@ -86,6 +86,7 @@ function saveLogin(req, res, login) {
       return res.sendStatus(500);
     });
 }
+
 
 function accountLogin(req, res, account) {
   //generate sms code
@@ -117,8 +118,9 @@ function accountLogin(req, res, account) {
     });
 }
 
-//TODO refactor this controller it is too bloated
+
 exports.mobileNumberProcessForm = function (req, res) {
+
   console.log('loginForm session:', req.session);
   console.log('mobileNumberProcessForm body:', req.body);
 
@@ -149,6 +151,7 @@ exports.mobileNumberProcessForm = function (req, res) {
       return res.send(500);
     });
 };
+
 
 exports.registerProcessForm = function (req, res) {
   //create account
@@ -245,10 +248,12 @@ exports.confirmSms = function(req, res, next) {
 
 };
 
+
 exports.logout = function (req, res) {
   req.logout();
   res.redirect('/');
 };
+
 
 exports.account = [
   login.ensureLoggedIn(),

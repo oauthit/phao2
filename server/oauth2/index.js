@@ -8,11 +8,11 @@ var oauth2orize = require('oauth2orize');
 var passport = require('passport');
 var login = require('connect-ensure-login');
 var config = require('../config/index');
-var db = require('../../' + config.db.type);
 var utils = require('../utils');
 var debug = require('debug')('oauth2orize:authorization-server/oauth2');
 var stapi = require('../stapi/abstract.model.js');
 var AccessToken = stapi('accessToken');
+var RefreshToken = stapi('refreshToken');
 var AuthCode = stapi('authCode');
 var Client = stapi('client');
 
@@ -87,7 +87,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
 
         debug('deleteById result:', result);
         if (result !== undefined && result === 0) {
-          //This condition can result because of a "race condition" that can occur naturally when you're making
+          //This condition can result because of a 'race condition' that can occur naturally when you're making
           //two very fast calls to the authorization server to exchange authorization codes.  So, we check for
           // the result and if it's not undefined and the result is zero, then we have already deleted the
           // authorization code
@@ -108,14 +108,22 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
           //a refresh token or not
 
           //TODO: for now without scope and refresh tokens :(
-          if (authCode.scope && authCode.scope.indexOf("offline_access") === 0) {
+          if (authCode.scope && authCode.scope.indexOf('offline_access') === 0) {
+
             refreshToken = utils.uid(config.token.refreshTokenLength);
-            db.refreshTokens.save(refreshToken, authCode.userID, authCode.clientID, authCode.scope, function (err) {
+
+            RefreshToken().save({
+              code: refreshToken,
+              accountId: authCode.accountId,
+              clientId: authCode.clientId,
+              authCodeId: authCode.id
+            }, function (err) {
               if (err) {
                 return done(err);
               }
               return done(null, token, refreshToken, {expires_in: config.token.expiresIn});
             });
+
           } else {
             return done(null, token, refreshToken, {expires_in: config.token.expiresIn});
           }

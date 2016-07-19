@@ -23,8 +23,6 @@ gulp.task('build', cb => {
     ],
     [
       'copy:extras',
-      'copy:fonts',
-      'copy:assets',
       'copy:server',
       'transpile:server'
     ],

@@ -12,7 +12,7 @@ var fs = require('fs');
 var expressSession = require("express-session");
 var path = require('path');
 
-export default function(app) {
+export default function (app) {
 //Pull in the mongo store if we're configured to use it
 //else pull in MemoryStore for the session configuration
   var sessionStorage;
@@ -26,6 +26,11 @@ export default function(app) {
     var MemoryStore = expressSession.MemoryStore;
     console.log('Using MemoryStore for the Session');
     sessionStorage = new MemoryStore();
+  } else if (config.session.type === 'RedisStore') {
+    var RedisStore = require('connect-redis')(expressSession);
+    var redisConfig = config.redis;
+    console.log('Using RedisStore for the Session');
+    sessionStorage = new RedisStore(redisConfig);
   } else {
     //We have no idea here
     throw new Error("Within config/index.js the session.type is unknown: " + config.session.type);

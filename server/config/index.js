@@ -1,6 +1,8 @@
 /*jslint node: true */
 'use strict';
 
+var env = process.env;
+
 //
 // The configuration options of the server
 //
@@ -53,7 +55,7 @@ exports.db = {
  * dbName - The database name if you're using Mongo
  */
 exports.session = {
-  type: "MemoryStore",
+  type: 'RedisStore',
   maxAge: 3600000 * 24 * 7 * 52,
   //TODO You need to change this secret to something that you choose for your secret
   secret: "A Secret That Should Be Changed",
@@ -73,5 +75,11 @@ exports.smsTrafficAPI = {
 
 
 exports.express = {
-  port: 3000
+  port: env.PORT || 3000
+};
+
+exports.redis = {
+  prefix: 'oa2sess:',
+  db: env.REDIS_DB || 5,
+  host: env.REDIS_HOST
 };

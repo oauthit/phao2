@@ -235,7 +235,7 @@ exports.decision = [
  * authenticate when making requests to this endpoint.
  */
 exports.token = [
-  passport.authenticate(['basic', 'oauth2-client-password'], {session: false}),
+  passport.authenticate(['oauth2-client-password'], {session: false}),
   server.token(),
   server.errorHandler()
 ];

@@ -13,7 +13,7 @@ var utils = require('../utils');
 var debug = require('debug')('oauth2orize:authorization-server/oauth2');
 var stapi = require('../stapi/abstract.model.js');
 var AccessToken = stapi('accessToken');
-var AuthorizationCode = stapi('authorizationCode');
+var AuthCode = stapi('authCode');
 var Client = stapi('client');
 
 // create OAuth 2.0 server
@@ -38,7 +38,7 @@ var server = oauth2orize.createServer();
 server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, done) {
   var code = utils.uid(config.token.authorizationCodeLength);
   debug('grant code:', client, user, ares);
-  AuthorizationCode().save({
+  AuthCode().save({
       code: code,
       clientId: client.id,
       accountId: user.id,
@@ -66,7 +66,7 @@ server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, d
  */
 server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, done) {
   debug('exchange code:', client, code, redirectURI);
-  AuthorizationCode().findOne({
+  AuthCode().findOne({
     params: {
       code: code
     }
@@ -82,7 +82,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
       return done(null, false);
     }
     //TODO maybe delete by code?
-    AuthorizationCode().deleteById(authCode.id)
+    AuthCode().deleteById(authCode.id)
       .then(function (result) {
 
         debug('deleteById result:', result);
@@ -102,7 +102,8 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
           code: token,
           accountId: authCode.accountId,
           clientId: authCode.clientId,
-          expirationDate: config.token.calculateExpirationDate()
+          expirationDate: config.token.calculateExpirationDate(),
+          authCodeId: authCode.id
         }).then(function (accessToken) {
           var refreshToken = null;
           //I mimic openid connect's offline scope to determine if we send

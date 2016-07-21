@@ -6,7 +6,6 @@ var express = require('express');
 var passport = require('passport');
 
 var http = require('http');
-var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var expressSession = require('express-session');
@@ -17,24 +16,24 @@ export default function (app) {
   var sessionStorage;
 
   if (config.session.type === 'MemoryStore') {
-  
+
     var MemoryStore = expressSession.MemoryStore;
-  
+
     console.log('Using MemoryStore for the Session');
     sessionStorage = new MemoryStore();
-  
+
   } else if (config.session.type === 'RedisStore') {
-    
+
     var RedisStore = require('connect-redis')(expressSession);
     var redisConfig = config.redis;
     console.log('Using RedisStore for the Session');
     sessionStorage = new RedisStore(redisConfig);
-    
+
   } else {
     //We have no idea here
     throw new Error('Within config/index.js the session.type is unknown: ' + config.session.type);
   }
-  
+
 
 // Express configuration
   var env = app.get('env');
@@ -76,5 +75,5 @@ export default function (app) {
       next();
     }
   });
-  
+
 }

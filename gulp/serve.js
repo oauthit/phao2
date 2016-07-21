@@ -63,7 +63,8 @@ gulp.task('start:server:prod', () => {
 
 gulp.task('start:server', () => {
   process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-  conf.config = require(`../${conf.serverPath}/config/environment`);
+  // conf.config = require(`../${conf.serverPath}/config/environment`);
+  conf.config = require(`../${conf.serverPath}/config`);
   nodemon(`-w ${conf.serverPath} ${conf.serverPath}`)
     .on('log', onServerLog);
 });

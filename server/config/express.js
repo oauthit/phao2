@@ -7,6 +7,7 @@ var passport = require('passport');
 
 var http = require('http');
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 var fs = require('fs');
 var expressSession = require('express-session');
 var path = require('path');
@@ -49,7 +50,7 @@ export default function (app) {
     resave: true,
     secret: config.session.secret,
     store: sessionStorage,
-    key: 'authorization.sid',
+    key: 'pha.sid',
     cookie: {maxAge: config.session.maxAge}
   }));
 

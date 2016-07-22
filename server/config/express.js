@@ -42,8 +42,8 @@ export default function (app) {
 
   app.set('views', config.root + '/server/views');
   app.set('view engine', 'pug');
-  app.use(cookieParser());
 
+  app.use(cookieParser());
 //Session Configuration
   app.use(expressSession({
     saveUninitialized: true,

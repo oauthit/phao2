@@ -23,7 +23,7 @@
  * and I can also pad anything trying to touch it on the right.
  */
 .input-fields {
-  padding-right: 20px;
+  /*padding-right: 20px;*/
 }
 
 /**
@@ -47,7 +47,7 @@
  * Very specific to the sign on button.
  */
 .sign-in-button {
-  padding-right: 20px;
+  /*padding-right: 20px;*/
   text-align: right;
 }
 

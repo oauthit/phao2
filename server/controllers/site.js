@@ -1,5 +1,5 @@
 /*jslint node: true */
-/*global exports */
+/*global exports console*/
 'use strict';
 
 //TODO Document all of this
@@ -16,8 +16,8 @@ var Account = stapi('account');
 var debug = require('debug')('oauth2orize:controller:site');
 
 
-exports.index = function (req, res) {
-  res.render('index');
+exports.index = function (req, res, next) {
+  res.redirect('account');
 };
 
 
@@ -256,7 +256,7 @@ exports.logout = function (req, res) {
 
 
 exports.account = [
-  login.ensureLoggedIn(),
+  login.ensureLoggedIn('login'),
   function (req, res) {
     res.render('account', {user: req.user});
   }

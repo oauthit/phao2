@@ -148,7 +148,7 @@ exports.mobileNumberProcessForm = function (req, res) {
 
     }).catch(function (err) {
       console.log(err);
-      return res.send(500);
+      return res.sendStatus(503);
     });
 };
 

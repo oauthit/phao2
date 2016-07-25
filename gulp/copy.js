@@ -5,17 +5,19 @@ import paths from './conf';
 
 gulp.task('copy:extras', () => {
   return gulp.src([
-      `${paths.clientPath}/favicon.ico`,
-      `${paths.clientPath}/robots.txt`,
-      `${paths.clientPath}/.htaccess`
-    ], {dot: true})
+    `${paths.clientPath}/favicon.ico`,
+    `${paths.clientPath}/robots.txt`,
+    `${paths.clientPath}/.htaccess`
+  ], {dot: true})
     .pipe(gulp.dest(`${paths.dist}/${paths.clientPath}`));
 });
 
 gulp.task('copy:server', () => {
   return gulp.src([
-      'package.json'
-    ], {cwdbase: true})
+    'package.json',
+    paths.serverPath + '/views/**',
+    paths.serverPath + '/public/**'
+  ], {cwdbase: true})
     .pipe(gulp.dest(paths.dist));
 });
 

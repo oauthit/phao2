@@ -32,7 +32,10 @@ function model(name) {
           //}
         }, function (err, res, body) {
 
-          //debug ('find',body);
+          if (/5[\d]{2}/.test(res.statusCode)) {
+            return reject (body);
+          }
+
           if (err) {
             return reject(err);
           }
@@ -57,7 +60,9 @@ function model(name) {
       return new Promise(function (resolve, reject) {
 
         find(options).then(function (reply) {
-          reply && reply.length && resolve(reply[0]) || resolve(false);
+          var data = reply && reply.length && reply[0] || false;
+          console.error('findOne:', data, reply);
+          resolve(data);
         }, reject);
 
       });

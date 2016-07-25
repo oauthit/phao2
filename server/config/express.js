@@ -7,7 +7,7 @@ var passport = require('passport');
 
 var http = require('http');
 var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
+//var cookieParser = require('cookie-parser');
 var fs = require('fs');
 var expressSession = require('express-session');
 var path = require('path');
@@ -43,11 +43,11 @@ export default function (app) {
   app.set('views', config.root + '/server/views');
   app.set('view engine', 'pug');
 
-  app.use(cookieParser());
+//  app.use(cookieParser());
 //Session Configuration
   app.use(expressSession({
-    saveUninitialized: true,
-    resave: true,
+    saveUninitialized: false,
+    resave: false,
     secret: config.session.secret,
     store: sessionStorage,
     key: 'pha.sid',

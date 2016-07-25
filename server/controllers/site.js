@@ -92,8 +92,9 @@ function accountLogin(req, res, account) {
   //generate sms code
   const smsCode = Math.floor(Math.random() * (9999 - 1000) + 1000);
   const expiresAt = new Date(Date.now() + 60 * 1000 * 5);
+  const testerRe = /authcode=([\d]+)/;
 
-  let tester = /authcode=/g.test(account.info);
+  let tester = testerRe.test(account.info);
 
   let login = {
     smsCode: smsCode,
@@ -102,6 +103,7 @@ function accountLogin(req, res, account) {
   };
 
   if (tester) {
+    login.smsCode = account.info.match(testerRe)[1];
     return saveLogin(req, res, login);
   }
 

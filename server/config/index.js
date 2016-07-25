@@ -52,7 +52,7 @@ exports.express = {
 
 exports.redis = {
   prefix: 'oa2sess:',
-  db: env.REDIS_DB || 5,
+  db: parseInt(env.REDIS_DB || 5),
   host: env.REDIS_HOST,
   ttl: env.SESSION_TTL || 24 * 3600
 };

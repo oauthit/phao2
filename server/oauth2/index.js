@@ -165,7 +165,6 @@ exports.authorization = [
   login.ensureLoggedIn(),
   function (req, res, next) {
     console.log('session:', req.session);
-    console.log('middleware');
     next();
   },
   server.authorization(function (clientID, redirectURI, scope, done) {

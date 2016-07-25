@@ -22,6 +22,12 @@ body {
   padding-top: 60px;
 }
 
+@media (max-width: 767px) {
+  body {
+    padding-top: 20px;
+  }
+}
+
 /**
  * Make links smaller,
  */
@@ -45,13 +51,11 @@ pre {
   border-color: #f0ad4e
 }
 
-
 /**
  * Upper box that contains the title Authorization Server, the UserName, and Password fields
  */
 .upper-box {
 
-  max-width: 310px;
 
   border-top: 1px solid;
   border-left: 1px solid;
@@ -98,7 +102,6 @@ pre {
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
 
-  max-width: 310px;
   padding: 15px 20px;
   box-shadow: 1px 1px 2px #e7e7e7;
   margin-left: auto;
@@ -122,4 +125,8 @@ pre {
     color-stop(0.67, rgb(242, 245, 250)),
     color-stop(0.94, rgb(242, 245, 255))
   );
+}
+
+.upper-box, .bottom-box {
+  max-width: 310px;
 }

@@ -51,7 +51,7 @@ pre {
  */
 .upper-box {
 
-  max-width: 350px;
+  max-width: 310px;
 
   border-top: 1px solid;
   border-left: 1px solid;
@@ -98,7 +98,7 @@ pre {
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
 
-  max-width: 350px;
+  max-width: 310px;
   padding: 15px 20px;
   box-shadow: 1px 1px 2px #e7e7e7;
   margin-left: auto;

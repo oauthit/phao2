@@ -61,7 +61,6 @@ function model(name) {
 
         find(options).then(function (reply) {
           var data = reply && reply.length && reply[0] || false;
-          console.error('findOne:', data, reply);
           resolve(data);
         }, reject);
 

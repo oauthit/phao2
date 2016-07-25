@@ -6,6 +6,9 @@ var express = require('express');
 var http = require('http');
 var fs = require('fs');
 
+import debug from 'debug';
+debug.log = console.info.bind(console);
+
 
 // Passport configuration
 require('./auth');

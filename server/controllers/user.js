@@ -22,7 +22,7 @@ exports.info = [
   passport.authenticate('bearer', {session: false}),
   function (req, res) {
     res.json({
-      authId: req.user.id,
+      id: req.user.id,
       name: req.user.name,
       scope: req.authInfo.scope
     });

@@ -10,7 +10,8 @@ exports.info = [
     res.json({
       id: req.user.id,
       name: req.user.name,
-      scope: req.authInfo.scope
+      displayName: req.user.name,
+      mobileNumber: req.user.mobileNumber
     });
   }
 ];

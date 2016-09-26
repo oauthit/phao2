@@ -1,7 +1,7 @@
 extends ./layout.pug
 
 block title
-  title SMS OAUTH
+  title #{__('SMS OAUTH')}
   link(rel='stylesheet', type='text/css', href='../stylesheets/index-modules.css')
 block scripts
   script(type='text/javascript').
@@ -11,6 +11,6 @@ block scripts
 
 block body
   #main
-    h1 OAuth2 SMS Authorization Server
+    h1 #{__('OAuth2 SMS Authorization Server')}
 
-    button#accessTokenCallApiButton.pure-button.pure-button-primary(type='button' onclick='onLoginClick()') Login
+    button#accessTokenCallApiButton.pure-button.pure-button-primary(type='button' onclick='onLoginClick()') #{__('Login')}

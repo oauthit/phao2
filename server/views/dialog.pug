@@ -9,18 +9,18 @@ block body
     fieldset
       .upper-box
         div
-          .main-text Application Authorization
+          .main-text #{__('Application Authorization')}
         .pure-control-group.labels
           p
-            span The application
+            span #{__('The application')}
             = ' '
             b #{client.name}
             = ' '
-            span is requesting access to your account.
-          p Do you approve?
+            span #{__('is requesting access to your account.')}
+          p #{__('Do you approve?')}
       .bottom-box
         .pure-controls.accept-cancel-buttons
           div
-            input#allow.pure-button.pure-button-primary(type='submit', value='Approve')
+            input#allow.pure-button.pure-button-primary(type='submit', value=__('Approve'))
             span &nbsp;&nbsp;
-            input#deny.pure-button(type='submit', value='Deny', name='cancel')
+            input#deny.pure-button(type='submit', value=__('Deny'), name='cancel')

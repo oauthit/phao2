@@ -1,7 +1,7 @@
 extends ./layout.pug
 
 block title
-  title Account Register
+  title #{__('Account Register')}
 
 block scripts
   link(rel='stylesheet', type='text/css', href='stylesheets/sign-in-modules.css')
@@ -11,17 +11,17 @@ block body
     fieldset
       .upper-box
         div
-          h1.title-padding Register an account
+          h1.title-padding #{__('Register an account')}
           if error
             .subtext #{error}
         .pure-control-group
-          label.labels(for='name') Name:
+          label.labels(for='name') #{__('Name')}:
           .input-fields
-            input#name.pure-input-1.input-fields(type='text', placeholder='Name', name='name')
+            input#name.pure-input-1.input-fields(type='text', placeholder=__('Name'), name='name')
         .pure-control-group
-          label.labels(for='mobileNumber') Mobile Number:
+          label.labels(for='mobileNumber') #{__('Mobile Number')}:
           .input-fields
-            input#mobileNumber.pure-input-1.input-fields(type='text', placeholder='Mobile Number', name='mobileNumber', value=mobileNumber)
+            input#mobileNumber.pure-input-1.input-fields(type='text', placeholder=__('Mobile Number'), name='mobileNumber', value=mobileNumber)
       .bottom-box
         .pure-controls.sign-in-button
-          button.pure-button.pure-button-primary(type='submit', value='Submit') Register
+          button.pure-button.pure-button-primary(type='submit', value=__('Submit')) #{__('Register')}

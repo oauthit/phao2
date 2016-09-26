@@ -14,6 +14,7 @@ var stapi = require('./../stapi/abstract.model.js');
 var Login = stapi('login');
 var Account = stapi('account');
 var debug = require('debug')('oauth2orize:controller:site');
+var i18n = require('i18n');
 
 
 exports.index = function (req, res, next) {
@@ -27,6 +28,8 @@ exports.registerForm = function (req, res) {
 
 
 exports.loginForm = function (req, res) {
+
+  i18n.setLocale(req, 'ru');
 
   console.log('loginForm session:', req.session);
 

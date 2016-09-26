@@ -5,6 +5,17 @@ var config = require('../config/index');
 var express = require('express');
 var passport = require('passport');
 
+// internalization
+var i18n = require('i18n');
+i18n.configure({
+  locales: ['en', 'ru'],
+  defaultLocale: 'ru',
+  directory: __dirname + '/locales',
+  register: global
+});
+
+i18n.setLocale('ru');
+
 var http = require('http');
 var bodyParser = require('body-parser');
 //var cookieParser = require('cookie-parser');
@@ -58,6 +69,8 @@ export default function (app) {
   app.use(bodyParser.json());
   app.use(passport.initialize());
   app.use(passport.session());
+
+  app.use(i18n.init);
 
 // Passport configuration
   require('../auth');

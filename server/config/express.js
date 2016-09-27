@@ -14,7 +14,8 @@ i18n.configure({
   register: global
 });
 
-i18n.setLocale('ru');
+// application wide locale
+i18n.setLocale(config.language);
 
 var http = require('http');
 var bodyParser = require('body-parser');
@@ -70,7 +71,7 @@ export default function (app) {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  app.use(i18n.init);
+  // app.use(i18n.init);
 
 // Passport configuration
   require('../auth');

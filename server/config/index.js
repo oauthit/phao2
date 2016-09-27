@@ -56,3 +56,5 @@ exports.redis = {
   host: env.REDIS_HOST,
   ttl: env.SESSION_TTL || 24 * 3600
 };
+
+exports.language = env.LANGUAGE || 'ru';

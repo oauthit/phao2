@@ -16,20 +16,15 @@ var Account = stapi('account');
 var debug = require('debug')('oauth2orize:controller:site');
 var i18n = require('i18n');
 
-
 exports.index = function (req, res, next) {
   res.redirect('account');
 };
-
 
 exports.registerForm = function (req, res) {
   return res.render('register');
 };
 
-
 exports.loginForm = function (req, res) {
-
-  i18n.setLocale(req, 'ru');
 
   console.log('loginForm session:', req.session);
 
@@ -43,7 +38,6 @@ exports.loginForm = function (req, res) {
   return res.render('login', {clientId: query.client_id});
 
 };
-
 
 function sendSms(req, smsCode) {
   let options = {
@@ -64,7 +58,6 @@ function sendSms(req, smsCode) {
 
   return rp(options);
 }
-
 
 function saveLogin(req, res, login) {
   console.log('login:', login);
@@ -89,7 +82,6 @@ function saveLogin(req, res, login) {
       return res.sendStatus(500);
     });
 }
-
 
 function accountLogin(req, res, account) {
   //generate sms code
@@ -137,6 +129,9 @@ exports.mobileNumberProcessForm = function (req, res) {
     });
   }
 
+  mobileNumber = mobileNumber.replace(/[^\d]/g,'');
+  console.log(mobileNumber);
+
   return Account(req).findOne({
     mobileNumber: mobileNumber
   })
@@ -146,9 +141,10 @@ exports.mobileNumberProcessForm = function (req, res) {
       if (account) {
         return accountLogin(req, res, account);
       } else {
+
         //TODO for now just error that mobileNumber incorrect
-        return res.render('error', {text: `The number ${mobileNumber} is not registered`});
-        // return res.render('register', {mobileNumber: req.body.mobileNumber});
+        // return res.render('error', {text: `The number ${mobileNumber} is not registered`});
+        return res.render('register', {mobileNumber: req.body.mobileNumber});
       }
 
     }).catch(function (err) {
@@ -162,11 +158,21 @@ exports.registerProcessForm = function (req, res) {
   //create account
   //then login
 
+  let mobileNumber = req.body.mobileNumber;
+
+  if (!mobileNumber) {
+    return res.render('register', {
+      error: 'Mobile Number is required'
+    });
+  }
+
+  mobileNumber = mobileNumber.replace(/[^\d]/g,'');
+
   Account(req).find({
-    mobileNumber: req.body.mobileNumber
+    mobileNumber: mobileNumber
   }).then((response) => {
     console.log('find account by mobileNumber:', response);
-    if (response) {
+    if (response && response.length > 0) {
       let account = response[0];
       console.log('registerProcessForm account:', account);
       return accountLogin(req, res, account).then((response) => {
@@ -180,14 +186,15 @@ exports.registerProcessForm = function (req, res) {
     } else {
       Account(req).save({
         name: req.body.name,
-        mobileNumber: req.body.mobileNumber
+        mobileNumber: mobileNumber,
+        isConfirmed: false
       }).then((account) => {
         console.log('registerProcessForm account:', account);
         console.log(account);
         return accountLogin(req, res, account).then((response) => {
           console.log(response);
           res.render('confirm', {
-            mobileNumber: req.body.mobileNumber,
+            mobileNumber: mobileNumber,
             mobileNumberId: response.accountId,
             loginId: response.id
           });
@@ -239,6 +246,11 @@ exports.confirmSms = function(req, res, next) {
         return next(err);
       } else {
         let nextUrl = '/account';
+
+        // set isConfirmed to true
+        Account(req).update(req.body.mobileNumberId, {
+          isConfirmed: true
+        });
 
         if (req.session && req.session.returnTo) {
           nextUrl = req.session.returnTo;

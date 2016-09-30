@@ -17,5 +17,11 @@
 	"Other info": "Дополнительная информация",
 	"Logout": "Выйти",
 	"User name": "Имя пользователя",
-	"Submit": "Submit"
+	"Submit": "Потвердить",
+	"Error": "Ошибка",
+	"Authorization Error": "Ошибка авторизаций",
+	"Go to login": "Перейти на страничку присоединения",
+	"Account Register": "Регистрация профиля",
+	"Register an account": "Зарегистрировать профиль",
+	"Register": "Регистрироваться"
 }

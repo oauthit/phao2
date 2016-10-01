@@ -248,7 +248,7 @@ exports.confirmSms = function(req, res, next) {
         let nextUrl = '/account';
 
         // set isConfirmed to true
-        Account(req).update(req.body.mobileNumberId, {
+        Account(req).patch(req.body.mobileNumberId, {
           isConfirmed: true
         });
 

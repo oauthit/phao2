@@ -118,12 +118,11 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
               accountId: authCode.accountId,
               clientId: authCode.clientId,
               authCodeId: authCode.id
-            }, function (err) {
-              if (err) {
-                return done(err);
-              }
-              return done(null, token, refreshToken, {expires_in: config.token.expiresIn});
-            });
+            })
+              .then(()=>{
+                return done(null, token, refreshToken, {expires_in: config.token.expiresIn});
+              })
+              .catch(done);
 
           } else {
             return done(null, token, refreshToken, {expires_in: config.token.expiresIn});

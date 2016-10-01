@@ -16,7 +16,8 @@ gulp.task('copy:server', () => {
   return gulp.src([
     'package.json',
     paths.serverPath + '/views/**',
-    paths.serverPath + '/public/**'
+    paths.serverPath + '/public/**',
+    paths.serverPath + '/config/**/*.json',
   ], {cwdbase: true})
     .pipe(gulp.dest(paths.dist));
 });

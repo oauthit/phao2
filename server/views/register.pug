@@ -15,7 +15,9 @@ block body
         div
           h1.title-padding #{__('Register an account')}
           if error
-            .subtext #{error}
+            .subtext.error
+              label #{__('Error')}:
+              .text #{error}
         .pure-control-group
           label.labels(for='name') #{__('Name')}:
           .input-fields

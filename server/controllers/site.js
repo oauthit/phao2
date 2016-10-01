@@ -158,12 +158,17 @@ exports.registerProcessForm = function (req, res) {
   //create account
   //then login
 
-  let mobileNumber = req.body.mobileNumber;
+  let {mobileNumber, name} = req.body;
+  let error;
 
   if (!mobileNumber) {
-    return res.render('register', {
-      error: 'Mobile Number is required'
-    });
+    error = 'Mobile Number is required';
+  } else if (!name) {
+    error = 'Name is required';
+  }
+
+  if (error) {
+    return res.render('register', {error, mobileNumber});
   }
 
   mobileNumber = mobileNumber.replace(/[^\d]/g,'');

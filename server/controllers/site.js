@@ -90,7 +90,7 @@ function accountLogin(req, res, account) {
     accountId: account.id
   };
 
-  if ('tester') {
+  if (tester) {
     login.smsCode = account.info && account.info.match(testerRe)[1] || '1234';
     return saveLogin(req, res, login);
   }

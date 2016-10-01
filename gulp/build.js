@@ -33,7 +33,7 @@ gulp.task('clean:dist', () => del([`${conf.dist}/!(.git*|.openshift|Procfile)**`
 
 
 gulp.task('transpile:server', () => {
-  return gulp.src(_.union(conf.server.scripts))
+  return gulp.src(conf.server.scripts)
     .pipe(pipes.transpileServer())
     .pipe(gulp.dest(`${conf.dist}/${conf.serverPath}`));
 });

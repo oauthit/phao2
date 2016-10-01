@@ -69,17 +69,10 @@ function saveLogin(req, res, login) {
     clientId: req.body.clientId,
     accountId: login.accountId
   })
-    .then(function (response) {
-      console.log('response:', response);
-      return res.render('confirm', {
-        mobileNumber: req.body.mobileNumber,
-        mobileNumberId: login.accountId,
-        loginId: response.id
-      });
-    })
     .catch(function (err) {
       console.log(err);
-      return res.sendStatus(500);
+      res.sendStatus(500);
+      return err;
     });
 }
 
@@ -138,7 +131,14 @@ exports.mobileNumberProcessForm = function (req, res) {
       console.log(account);
 
       if (account) {
-        return accountLogin(req, res, account);
+        return accountLogin(req, res, account)
+          .then((response) => {
+              res.render('confirm', {
+                mobileNumber: mobileNumber,
+                mobileNumberId: login.accountId,
+                loginId: response.id
+              });
+            });
       } else {
 
         //TODO for now just error that mobileNumber incorrect
@@ -195,7 +195,7 @@ exports.registerProcessForm = function (req, res) {
         console.log(response);
 
         res.render('confirm', {
-          mobileNumber: req.body.mobileNumber,
+          mobileNumber: mobileNumber,
           mobileNumberId: response.accountId,
           loginId: response.id
         });

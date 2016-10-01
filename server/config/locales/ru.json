@@ -31,5 +31,6 @@
 	"Last Name is required": "Фамилию нужно обязательно указать",
 	"Mobile Number is required": "Нужно указать мобильный номер",
 	"SMS code is required": "Нужно ввести код из СМС",
-	"Wrong SMS code": "Указан неправильный код"
+	"Wrong SMS code": "Указан неправильный код",
+	"SMS code expired": "СМС-код устарел"
 }

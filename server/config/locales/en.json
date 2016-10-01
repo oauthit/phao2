@@ -29,5 +29,6 @@
 	"Last Name is required": "Last Name is required",
   "Mobile Number is required": "Mobile Number is required",
   "SMS code is required": "SMS code is required",
-  "Wrong SMS code": "Wrong SMS code"
+  "Wrong SMS code": "Wrong SMS code",
+  "SMS code expired": "SMS code is expired"
 }

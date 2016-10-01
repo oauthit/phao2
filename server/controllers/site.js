@@ -158,17 +158,24 @@ exports.registerProcessForm = function (req, res) {
   //create account
   //then login
 
-  let {mobileNumber, name} = req.body;
+  let {mobileNumber, firstName, lastName} = req.body;
   let error;
 
   if (!mobileNumber) {
     error = 'Mobile Number is required';
-  } else if (!name) {
-    error = 'Name is required';
+  } else if (!firstName) {
+    error = 'Fisrt Name is required';
+  } else if (!lastName) {
+    error = 'Last Name is required';
   }
 
   if (error) {
-    return res.render('register', {error, mobileNumber});
+    return res.render('register', {
+      error,
+      mobileNumber,
+      lastName,
+      firstName
+    });
   }
 
   mobileNumber = mobileNumber.replace(/[^\d]/g,'');
@@ -190,7 +197,7 @@ exports.registerProcessForm = function (req, res) {
       });
     } else {
       Account(req).save({
-        name: req.body.name,
+        name: `${lastName} ${firstName}`,
         mobileNumber: mobileNumber,
         isConfirmed: false
       }).then((account) => {
@@ -205,9 +212,8 @@ exports.registerProcessForm = function (req, res) {
           });
         });
       }).catch((err) => {
-        // TODO: report an error
+
         console.error(err);
-        //res.sendStatus(500);
 
         if (err.text) {
           return res.render('register', {

@@ -12,9 +12,19 @@
 	"SMS Auth Profile": "SMS Auth Profile",
 	"User Profile": "User Profile",
 	"Name": "Name",
+	"FirstName": "FirstName",
+	"LastName": "LastName",
 	"E-mail": "E-mail",
 	"Other info": "Other info",
 	"Logout": "Logout",
 	"User name": "User name",
-  "Error": "Error"
+	"Error": "Error",
+	"SMS oauth": "SMS oauth",
+	"Submit": "Submit",
+	"Account Register": "Account Register",
+	"Register an account": "Register an account",
+	"Cancel": "Cancel",
+	"Register": "Register",
+	"Fisrt Name is required": "Fisrt Name is required",
+	"Last Name is required": "Last Name is required"
 }

@@ -13,6 +13,8 @@
 	"SMS Auth Profile": "СМС профиль",
 	"User Profile": "Профиль пользователя",
 	"Name": "Имя",
+	"FirstName": "Имя",
+	"LastName": "Фамилия",
 	"E-mail": "Электроная почта",
 	"Other info": "Дополнительная информация",
 	"Logout": "Выйти",
@@ -22,6 +24,9 @@
 	"Authorization Error": "Ошибка авторизации",
 	"Go to login": "На страницу входа",
 	"Account Register": "Регистрация профиля",
-	"Register an account": "Зарегистрировать профиль",
-	"Register": "Регистрироваться"
+	"Register an account": "Регистрация нового пользователя",
+	"Register": "Зарегистрироваться",
+	"Cancel": "Отмена",
+	"Fisrt Name is required": "Имя нужно обязательно указать",
+	"Last Name is required": "Фамилию нужно обязательно указать"
 }

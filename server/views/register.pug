@@ -14,19 +14,32 @@ block body
     fieldset
       .upper-box
         div
-          h1.title-padding #{__('Register an account')}
+          h2.title-padding #{__('Register an account')}
           if error
-            .subtext.error
-              label #{__('Error')}:
-              .text #{error}
+            .subtext.error #{__(error)}
         .pure-control-group
           label.labels(for='name') #{__('Name')}:
           .input-fields
-            input#name.pure-input-1.input-fields(type='text', placeholder=__('Name'), name='name')
+            input#firstName.pure-input-1.input-fields(
+            type='text', placeholder=__('FirstName'), name='firstName', autofocus='',
+            value=firstName
+            )
+        .pure-control-group
+          label.labels(for='name') #{__('LastName')}:
+          .input-fields
+            input#lastName.pure-input-1.input-fields(type='text', placeholder=__('LastName'), name='lastName',
+            value=lastName
+            )
         .pure-control-group
           label.labels(for='mobileNumber') #{__('Mobile Number')}:
           .input-fields
-            input#mobileNumber.pure-input-1.input-fields(type='tel', placeholder=__('Mobile Number'), pattern='+7([0-9]{3})[0-9]{3}-[0-9]{2}-[0-9]{2}', name='mobileNumber', value=mobileNumber)
+            input#mobileNumber.pure-input-1.input-fields(
+            type='tel', placeholder=__('Mobile Number'),
+            pattern='+7([0-9]{3})[0-9]{3}-[0-9]{2}-[0-9]{2}', name='mobileNumber',
+            value=mobileNumber, readonly
+            )
       .bottom-box
         .pure-controls.sign-in-button
+          a.pure-button.button-warning(href='/') #{value=__('Cancel')}
+          span &nbsp;&nbsp;
           button.pure-button.pure-button-primary(type='submit', value=__('Submit')) #{__('Register')}

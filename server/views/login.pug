@@ -8,9 +8,8 @@ block scripts
   script(type='text/javascript' src='scripts/masks.js')
 
 block body
-  - var placeHolder = __('Mobile Number')
   if error
-    - var placeHolder = error
+    - var placeHolder = __(error)
     - var mobileNumberStyle = 'border-color: red'
   else
     - var placeHolder = __('Mobile Number')

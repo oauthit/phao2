@@ -26,5 +26,7 @@
 	"Cancel": "Cancel",
 	"Register": "Register",
 	"Fisrt Name is required": "Fisrt Name is required",
-	"Last Name is required": "Last Name is required"
+	"Last Name is required": "Last Name is required",
+  "Mobile Number is required": "Mobile Number is required",
+  "SMS code is required": "SMS code is required"
 }

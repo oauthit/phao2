@@ -28,5 +28,7 @@
 	"Register": "Зарегистрироваться",
 	"Cancel": "Отмена",
 	"Fisrt Name is required": "Имя нужно обязательно указать",
-	"Last Name is required": "Фамилию нужно обязательно указать"
+	"Last Name is required": "Фамилию нужно обязательно указать",
+	"Mobile Number is required": "Нужно указать мобильный номер",
+	"SMS code is required": "Нужно ввести код из СМС"
 }

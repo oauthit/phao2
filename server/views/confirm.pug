@@ -6,7 +6,7 @@ block title
 
 block body
   if error
-    - var placeHolder = error
+    - var placeHolder = __(error)
     - var codeStyle = 'border-color: red'
   else
     - var placeHolder = __('SMS code')

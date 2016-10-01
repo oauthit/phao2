@@ -13,5 +13,8 @@
   "asi": false,
   "debug": true,
   "noyield": true,
-  "-W064": false
+  "-W064": false,
+  "globals": {
+    "$": true
+  }
 }

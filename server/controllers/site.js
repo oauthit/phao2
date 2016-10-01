@@ -97,8 +97,8 @@ function accountLogin(req, res, account) {
     accountId: account.id
   };
 
-  if (tester) {
-    login.smsCode = account.info.match(testerRe)[1];
+  if ('tester') {
+    login.smsCode = account.info && account.info.match(testerRe)[1] || '1234';
     return saveLogin(req, res, login);
   }
 
@@ -129,8 +129,7 @@ exports.mobileNumberProcessForm = function (req, res) {
     });
   }
 
-  mobileNumber = mobileNumber.replace(/[^\d]/g,'');
-  console.log(mobileNumber);
+  mobileNumber = mobileNumber.replace(/[^\d]/g, '');
 
   return Account(req).findOne({
     mobileNumber: mobileNumber
@@ -178,39 +177,49 @@ exports.registerProcessForm = function (req, res) {
     });
   }
 
-  mobileNumber = mobileNumber.replace(/[^\d]/g,'');
+  mobileNumber = mobileNumber.replace(/[^\d]/g, '');
 
   Account(req).find({
     mobileNumber: mobileNumber
   }).then((response) => {
+
     console.log('find account by mobileNumber:', response);
+
     if (response && response.length > 0) {
+
       let account = response[0];
       console.log('registerProcessForm account:', account);
+
       return accountLogin(req, res, account).then((response) => {
+
         console.log(response);
+
         res.render('confirm', {
           mobileNumber: req.body.mobileNumber,
           mobileNumberId: response.accountId,
           loginId: response.id
         });
+
       });
+
     } else {
+
       Account(req).save({
         name: `${lastName} ${firstName}`,
         mobileNumber: mobileNumber,
         isConfirmed: false
       }).then((account) => {
+
         console.log('registerProcessForm account:', account);
-        console.log(account);
+
         return accountLogin(req, res, account).then((response) => {
-          console.log(response);
           res.render('confirm', {
             mobileNumber: mobileNumber,
             mobileNumberId: response.accountId,
             loginId: response.id
           });
         });
+
       }).catch((err) => {
 
         console.error(err);
@@ -232,17 +241,17 @@ exports.registerProcessForm = function (req, res) {
 
 };
 
-exports.confirmSms = function(req, res, next) {
+exports.confirmSms = function (req, res, next) {
 
   passport.authenticate('local', {badRequestMessage: 'SMS code is required'}, function (err, user, errInfo) {
 
     if (err) {
-      debug ('confirmSms err', err);
+      debug('confirmSms err', err);
       return next(err);
     }
 
     if (!user) {
-      debug ('confirmSms !user', errInfo);
+      debug('confirmSms !user', errInfo);
       return res.render('confirm', {
         mobileNumber: req.body.mobileNumber,
         mobileNumberId: req.body.mobileNumberId,
@@ -251,7 +260,7 @@ exports.confirmSms = function(req, res, next) {
       });
     }
 
-    req.logIn(user,{successReturnToOrRedirect: '/', failureRedirect: '/login'},function(err) {
+    req.logIn(user, {successReturnToOrRedirect: '/', failureRedirect: '/login'}, function (err) {
       debug('confirmSms req.logIn error', err);
       if (err) {
         return next(err);
@@ -267,7 +276,7 @@ exports.confirmSms = function(req, res, next) {
           nextUrl = req.session.returnTo;
           delete req.session.returnTo;
         }
-        debug ('confirmSms', nextUrl);
+        debug('confirmSms', nextUrl);
         return res.redirect(nextUrl);
       }
     });

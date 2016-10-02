@@ -22,7 +22,14 @@ block body
         .pure-control-group
           label.labels(for='code') #{__('Code')}:
           .input-fields
-            input#code.pure-input-1.input-fields(style=codeStyle, type='text', placeholder=placeHolder, name='code', autocomplete='off', autofocus='')
+            input#code.pure-input-1.input-fields(
+            style=codeStyle,
+            type='text',
+            placeholder=placeHolder,
+            name='code',
+            autocomplete='off',
+            autofocus=''
+            )
             input#mobileNumberId(type='hidden', name='mobileNumberId', value=mobileNumberId)
             input#loginId(type='hidden', name='loginId', value=loginId)
       .bottom-box

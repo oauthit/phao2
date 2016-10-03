@@ -1,6 +1,5 @@
 extends ./layout.pug
 
-
 block scripts
   link(rel='stylesheet', type='text/css', href='stylesheets/sign-in-modules.css')
 
@@ -10,7 +9,9 @@ block body
     - var mobileNumberStyle = 'border-color: red'
   else
     - var placeHolder = __('Mobile Number')
+
   form.pure-form.pure-form-stacked(action='/mobileNumberProcessForm', method='post')
+
     fieldset
       .upper-box
         div

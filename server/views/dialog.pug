@@ -4,11 +4,15 @@ block title
   title App Authorization
   link(rel='stylesheet', type='text/css', href='/stylesheets/dialog-modules.css')
 block body
+
   form.pure-form.pure-form-stacked(action='/dialog/authorize/decision', method='post')
+
     input(name='transaction_id', type='hidden', value=transactionID)
     fieldset
       .upper-box
         div
+          include _client-header.pug
+
           .main-text #{__('Application Authorization')}
         .pure-control-group.labels
           p

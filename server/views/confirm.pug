@@ -1,30 +1,39 @@
 extends ./layout.pug
 
 block title
-  title Login Confirm
+  title #{__('Login Confirm')}
   link(rel='stylesheet', type='text/css', href='/stylesheets/sign-in-modules.css')
 
 block body
   if error
-    - var placeHolder = error
+    - var placeHolder = __(error)
     - var codeStyle = 'border-color: red'
   else
-    - var placeHolder = 'SMS code'
+    - var placeHolder = __('SMS code')
   form.pure-form.pure-form-stacked(action='/confirmSms', method='post')
     fieldset
       .upper-box
         div
-          h1.title-padding Confirm authorization
+          h1.title-padding #{__('Confirm authorization')}
         .pure-control-group
-          label.labels(for='mobileNumber') Mobile Number:
+          label.labels(for='mobileNumber') #{__('Mobile Number')}:
           .input-fields
-            input#mobileNumber.pure-input-1.input-fields(type='text', value=mobileNumber, placeholder='Mobile Number', name='mobileNumber', readonly)
+            input#mobileNumber.pure-input-1.input-fields(type='text', value=mobileNumber, placeholder=__('Mobile Number'), name='mobileNumber', readonly)
         .pure-control-group
-          label.labels(for='code') Code:
+          label.labels(for='code') #{__('Code')}:
           .input-fields
-            input#code.pure-input-1.input-fields(style=codeStyle, type='text', placeholder=placeHolder, name='code', autocomplete='off', autofocus='')
+            input#code.pure-input-1.input-fields(
+            style=codeStyle,
+            type='text',
+            placeholder=placeHolder,
+            name='code',
+            autocomplete='off',
+            autofocus=''
+            )
             input#mobileNumberId(type='hidden', name='mobileNumberId', value=mobileNumberId)
             input#loginId(type='hidden', name='loginId', value=loginId)
       .bottom-box
         .pure-controls.sign-in-button
-          button.pure-button.pure-button-primary(type='submit', value='Submit') Sign in
+          a.pure-button.button-warning(href='/') #{value = __('Cancel')}
+          span &nbsp;&nbsp;
+          button.pure-button.pure-button-primary(type='submit', value=__('Submit')) #{__('Sign in')}

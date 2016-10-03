@@ -1,18 +1,18 @@
 extends ./layout.pug
 
 block title
-  title Error
+  title #{__('Error')}
   link(rel='stylesheet', type='text/css', href='/stylesheets/dialog-modules.css')
 block body
   form.pure-form.pure-form-stacked(action='/login', method='get')
     fieldset
       .upper-box
         div
-          .main-text Authorization Error
+          .main-text #{__('Authorization Error')}
         .pure-control-group.labels
           p
             b #{text}
       .bottom-box
         .pure-controls.accept-cancel-buttons
           div
-            input#allow.pure-button.pure-button-primary(type='submit', value='Go to login')
+            input#allow.pure-button.pure-button-primary(type='submit', value=__('Go to login'))

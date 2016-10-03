@@ -130,3 +130,13 @@ pre {
 .upper-box, .bottom-box {
   max-width: 310px;
 }
+
+
+.error {
+  color: red;
+}
+
+.upper-box .error > * {
+  display: inline;
+  margin-right: 5px;
+}

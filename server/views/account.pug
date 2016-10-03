@@ -1,7 +1,7 @@
 extends ./layout.pug
 
 block title
-  title SMS Auth Profile
+  title #{__('SMS Auth Profile')}
   link(rel='stylesheet', type='text/css', href='/stylesheets/sign-in-modules.css')
 
 block body
@@ -9,23 +9,25 @@ block body
     fieldset
       .upper-box
         div
-          h1.title-padding User Profile
+          h1.title-padding #{__('User Profile')}
         .pure-control-group
-          label.labels(for='name') Name:
+          label.labels(for='name') #{__('Name')}:
           .input-fields
-            input#name.pure-input-1.input-fields(type='text', placeholder='User name', value=user.name, readonly)
+            input#name.pure-input-1.input-fields(type='text', placeholder=__('User name'), value=user.name, readonly)
         .pure-control-group
-          label.labels(for='mobileNumber') Mobile Number:
+          label.labels(for='mobileNumber') #{__('Mobile Number')}:
           .input-fields
-            input#mobileNumber.pure-input-1.input-fields(type='text', value=user.mobileNumber, placeholder='Mobile Number', readonly)
-        .pure-control-group
-          label.labels(for='email') E-mail:
-          .input-fields
-            input#email.pure-input-1.input-fields(type='text', value=user.email, placeholder='E-mail', readonly)
-        .pure-control-group
-          label.labels(for='info') Other info:
-          .input-fields
-            input#info.pure-input-1.input-fields(type='text', value=user.info, placeholder='Other info', readonly)
+            input#mobileNumber.pure-input-1.input-fields(type='text', value=user.mobileNumber, placeholder=__('Mobile Number'), readonly)
+        if user.email
+          .pure-control-group
+            label.labels(for='email') #{__('E-mail')}:
+            .input-fields
+              input#email.pure-input-1.input-fields(type='text', value=user.email, placeholder=__('E-mail'), readonly)
+        if user.info
+          .pure-control-group
+            label.labels(for='info') #{__('Other info')}:
+            .input-fields
+              input#info.pure-input-1.input-fields(type='text', value=user.info, placeholder=__('Other info'), readonly)
       .bottom-box
         .pure-controls.sign-in-button
-          button.pure-button.button-warning(type='submit', value='Submit') Logout
+          button.pure-button.button-warning(type='submit', value='Submit') #{__('Logout')}

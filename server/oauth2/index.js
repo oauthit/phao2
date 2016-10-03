@@ -68,7 +68,8 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
   debug('exchange code:', client, code, redirectURI);
   AuthCode().findOne({
     params: {
-      code: code
+      code: code,
+      isUsed: false
     }
   }).then(function (authCode) {
     debug('authCode:', authCode);
@@ -82,7 +83,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
       return done(null, false);
     }
     //TODO maybe delete by code?
-    AuthCode().deleteById(authCode.id)
+    AuthCode().patch(authCode.id, {isUsed: true})
       .then(function (result) {
 
         debug('deleteById result:', result);
@@ -117,12 +118,11 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
               accountId: authCode.accountId,
               clientId: authCode.clientId,
               authCodeId: authCode.id
-            }, function (err) {
-              if (err) {
-                return done(err);
-              }
-              return done(null, token, refreshToken, {expires_in: config.token.expiresIn});
-            });
+            })
+              .then(()=>{
+                return done(null, token, refreshToken, {expires_in: config.token.expiresIn});
+              })
+              .catch(done);
 
           } else {
             return done(null, token, refreshToken, {expires_in: config.token.expiresIn});

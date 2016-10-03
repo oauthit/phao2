@@ -24,38 +24,48 @@ passport.use(new LocalStrategy({
     passwordField: 'code'
   },
   function (loginId, code, done) {
+
     debug('LocalStrategy code:', code, 'loginId:', loginId);
 
-    // TODO: find login by id, validate code, get account by login.accountId, return account
-
     return Login().findById(loginId)
-      .then(function (login) {
+      .then(login => {
+
         debug('login:', login, code);
+
+        if (login.attempts > 3) {
+          return done(null, false, {
+            text: 'SMS code expired'
+          });
+        }
+
         if (code !== login.code) {
+
+          Login().patch(loginId, {
+            attempts: ++ login.attempts
+          });
+
           return done(null, false, {
             text: 'Wrong SMS code'
           });
         }
+
         Account().findById(login.accountId)
-          .then(function (account) {
+          .then(account => {
             debug('account:', account);
             if (!account) return done(null, false);
 
-            //console.log(JSON.parse(account));
             return done(null, account);
           })
-          .catch(function (err) {
+          .catch(err => {
             debug('error:', err);
             return done(err);
-          })
-        ;
+          });
 
       })
-      .catch(function (err) {
+      .catch(err => {
         debug('error:', err);
         return done(err);
-      })
-      ;
+      });
   }
 ));
 

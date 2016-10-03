@@ -9,7 +9,7 @@ function model(name) {
 
   var collectionUrl = config.stapi.url + name;
 
-  return function (req) {
+  return function () {
 
     function find(options) {
       return new Promise(function (resolve, reject) {
@@ -32,13 +32,14 @@ function model(name) {
           //}
         }, function (err, res, body) {
 
+          if (err) {
+            return reject(err);
+          }
+
           if (/5[\d]{2}/.test(res.statusCode)) {
             return reject (body);
           }
 
-          if (err) {
-            return reject(err);
-          }
 
           if (!body) {
             return resolve([]);

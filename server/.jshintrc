@@ -15,6 +15,7 @@
   "noyield": true,
   "-W064": false,
   "globals": {
-    "$": true
+    "$": true,
+    "jQuery": true
   }
 }

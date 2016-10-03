@@ -7,7 +7,7 @@
  * Coloring h1 a bit off black, removing bold, and shadowing
  * a touch.
  */
-h1 {
+h1, h2 {
   color: #505050;
   text-shadow: 2px 1px 3px rgba(200, 200, 200, 0.43);
   font-weight: normal;

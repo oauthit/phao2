@@ -200,11 +200,18 @@ exports.registerProcessForm = function (req, res) {
   }
 
   if (error) {
-    return res.render('register', {
+    return renderWithClient('register', {
       error,
       mobileNumber,
       lastName,
       firstName
+    })(req, res, function () {
+      return res.render('register', {
+        error,
+        mobileNumber,
+        lastName,
+        firstName
+      });
     });
   }
 
@@ -225,10 +232,16 @@ exports.registerProcessForm = function (req, res) {
 
         console.log(response);
 
-        res.render('confirm', {
+        renderWithClient('confirm', {
           mobileNumber: mobileNumber,
           mobileNumberId: response.accountId,
           loginId: response.id
+        })(req, res, function () {
+          return res.render('confirm', {
+            mobileNumber: mobileNumber,
+            mobileNumberId: response.accountId,
+            loginId: response.id
+          });
         });
 
       });
@@ -244,11 +257,18 @@ exports.registerProcessForm = function (req, res) {
         console.log('registerProcessForm account:', account);
 
         return accountLogin(req, res, account).then((response) => {
-          res.render('confirm', {
+          return renderWithClient('confirm', {
             mobileNumber: mobileNumber,
             mobileNumberId: response.accountId,
             loginId: response.id
+          })(req, res, function () {
+            return res.render('confirm', {
+              mobileNumber: mobileNumber,
+              mobileNumberId: response.accountId,
+              loginId: response.id
+            });
           });
+
         });
 
       }).catch((err) => {
@@ -256,10 +276,16 @@ exports.registerProcessForm = function (req, res) {
         console.error(err);
 
         if (err.text) {
-          return res.render('register', {
+          return renderWithClient('register', {
             mobileNumber: req.body.mobileNumber,
             name: req.body.name,
             error: err.text
+          })(req, res, function () {
+            return res.render('register', {
+              mobileNumber: req.body.mobileNumber,
+              name: req.body.name,
+              error: err.text
+            });
           });
         }
 

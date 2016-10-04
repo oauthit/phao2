@@ -11,7 +11,8 @@ block body
     fieldset
       .upper-box
         div
-          include _client-header.pug
+          if client
+            include _client-header.pug
           h2.title-padding #{__('Register an account')}
           if error
             .subtext.error #{__(error)}

@@ -139,13 +139,12 @@ exports.mobileNumberProcessForm = function (req, res) {
     return renderWithClient('login', {
       error: 'Mobile Number is required'
     })(req, res, function () {
-      return res.render('login', {});
+      return res.render('login', {error: 'Mobile Number is required'});
     });
   }
 
   mobileNumber = mobileNumber.replace(/[^\d]/g, '');
 
-  console.log('here');
   return Account(req).findOne({
     mobileNumber: mobileNumber
   })

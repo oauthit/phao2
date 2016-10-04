@@ -15,6 +15,7 @@ module.exports = function (viewName, params) {
       if (query.client_id) {
         Client(req).findById(query.client_id)
           .then(client => {
+            console.log(query.client_id);
             console.log('find client by query.client_id');
             return res.render(viewName, Object.assign(params, {clientId: query.client_id}, {client}));
           })

@@ -13,6 +13,7 @@ var url = require('url');
 var stapi = require('./../stapi/abstract.model.js');
 var Login = stapi('login');
 var Account = stapi('account');
+var Client = stapi('client');
 var debug = require('debug')('oauth2orize:controller:site');
 var i18n = require('i18n');
 
@@ -35,7 +36,18 @@ exports.loginForm = function (req, res) {
   var url_parts = url.parse(req.session.returnTo, true);
   var query = url_parts.query;
 
-  return res.render('login', {clientId: query.client_id});
+  if (query.client_id) {
+    Client(req).findById(query.client_id)
+      .then(client => {
+        return res.render('login', Object.assign({clientId: query.client_id}, {client}));
+      })
+      .catch(err => {
+        return res.render('error', err);
+      })
+    ;
+  } else {
+    return res.render('login');
+  }
 
 };
 
@@ -143,7 +155,19 @@ exports.mobileNumberProcessForm = function (req, res) {
 
         //TODO for now just error that mobileNumber incorrect
         // return res.render('error', {text: `The number ${mobileNumber} is not registered`});
-        return res.render('register', {mobileNumber: req.body.mobileNumber});
+
+        if (req.body.clientId) {
+          Client(req).findById(req.body.clientId)
+            .then(client => {
+              return res.render('register', Object.assign({mobileNumber: req.body.mobileNumber}, {client}));
+            })
+            .catch(err => {
+              return res.render('error', err);
+            })
+          ;
+        } else {
+          return res.render('register', {mobileNumber: req.body.mobileNumber});
+        }
       }
 
     }).catch(function (err) {

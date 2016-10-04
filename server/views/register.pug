@@ -11,18 +11,19 @@ block body
     fieldset
       .upper-box
         div
+          include _client-header.pug
           h2.title-padding #{__('Register an account')}
           if error
             .subtext.error #{__(error)}
         .pure-control-group
-          label.labels(for='name') #{__('Name')}:
+          label.labels(for='firstName') #{__('Name')}:
           .input-fields
             input#firstName.pure-input-1.input-fields(
             type='text', placeholder=__('FirstName'), name='firstName', autofocus='',
             value=firstName
             )
         .pure-control-group
-          label.labels(for='name') #{__('LastName')}:
+          label.labels(for='lastName') #{__('LastName')}:
           .input-fields
             input#lastName.pure-input-1.input-fields(type='text', placeholder=__('LastName'), name='lastName',
             value=lastName

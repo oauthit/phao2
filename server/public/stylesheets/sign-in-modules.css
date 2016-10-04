@@ -4,9 +4,9 @@
  * TODO Fix this, can't figure out how to get this to center correctly.
  * It's currently anchored to the fieldset and that's causing issues.
  */
-.title-padding {
-  padding-left: 5px;
-}
+/*.title-padding {*/
+  /*padding-left: 5px;*/
+/*}*/
 
 /**
  * The username and password labels

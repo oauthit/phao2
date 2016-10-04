@@ -12,19 +12,18 @@ block body
       .upper-box
         div
           include _client-header.pug
-
-          .main-text #{__('Application Authorization')}
+          h2 #{__('Application Authorization')}
         .pure-control-group.labels
           p
             span #{__('The application')}
             = ' '
-            b #{client.name}
+            b #{client.title}
             = ' '
             span #{__('is requesting access to your account.')}
           p #{__('Do you approve?')}
       .bottom-box
         .pure-controls.accept-cancel-buttons
           div
-            input#allow.pure-button.pure-button-primary(type='submit', value=__('Approve'))
-            span &nbsp;&nbsp;
             input#deny.pure-button(type='submit', value=__('Deny'), name='cancel')
+            span &nbsp;&nbsp;
+            input#allow.pure-button.pure-button-primary(type='submit', value=__('Approve'))

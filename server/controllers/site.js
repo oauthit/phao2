@@ -284,11 +284,18 @@ exports.confirmSms = function (req, res, next) {
 
     if (!user) {
       debug('confirmSms !user', errInfo);
-      return res.render('confirm', {
+      return renderWithClient('confirm', {
         mobileNumber: req.body.mobileNumber,
         mobileNumberId: req.body.mobileNumberId,
         loginId: req.body.loginId,
         error: errInfo.text || errInfo.message
+      })(req, res, function () {
+        return res.render('confirm', {
+          mobileNumber: req.body.mobileNumber,
+          mobileNumberId: req.body.mobileNumberId,
+          loginId: req.body.loginId,
+          error: errInfo.text || errInfo.message
+        });
       });
     }
 

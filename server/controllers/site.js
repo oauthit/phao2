@@ -139,7 +139,7 @@ exports.mobileNumberProcessForm = function (req, res) {
     return renderWithClient('login', {
       error: 'Mobile Number is required'
     })(req, res, function () {
-      console.log('hello');
+      return res.render('login', {});
     });
   }
 

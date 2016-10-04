@@ -14,7 +14,8 @@ block body
     fieldset
       .upper-box
         div
-          include _client-header.pug
+          if client
+            include _client-header.pug
           h2.title-padding #{__('Confirm authorization')}
         .pure-control-group
           label.labels(for='mobileNumber') #{__('Mobile Number')}:

@@ -160,7 +160,11 @@ exports.mobileNumberProcessForm = function (req, res) {
                 mobileNumberId: login.accountId,
                 loginId: response.id
               })(req, res, function () {
-                console.log('after confirm');
+                return res.render('confirm', {
+                  mobileNumber: mobileNumber,
+                  mobileNumberId: login.accountId,
+                  loginId: response.id
+                });
               });
             });
       } else {

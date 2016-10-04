@@ -16,6 +16,7 @@ var Account = stapi('account');
 var Client = stapi('client');
 var debug = require('debug')('oauth2orize:controller:site');
 var i18n = require('i18n');
+var renderWithClient = require('./../middlewares/renderWithClient.middleware');
 
 exports.index = function (req, res, next) {
   res.redirect('account');
@@ -33,21 +34,27 @@ exports.loginForm = function (req, res) {
   if (!req.session.returnTo) {
     req.session.returnTo = '/account';
   }
-  var url_parts = url.parse(req.session.returnTo, true);
-  var query = url_parts.query;
 
-  if (query.client_id) {
-    Client(req).findById(query.client_id)
-      .then(client => {
-        return res.render('login', Object.assign({clientId: query.client_id}, {client}));
-      })
-      .catch(err => {
-        return res.render('error', err);
-      })
-    ;
-  } else {
+  renderWithClient('login', {})(req, res, function () {
+    console.log('login');
     return res.render('login');
-  }
+  });
+
+  // var url_parts = url.parse(req.session.returnTo, true);
+  // var query = url_parts.query;
+  //
+  // if (query.client_id) {
+  //   Client(req).findById(query.client_id)
+  //     .then(client => {
+  //       return res.render('login', Object.assign({clientId: query.client_id}, {client}));
+  //     })
+  //     .catch(err => {
+  //       return res.render('error', err);
+  //     })
+  //   ;
+  // } else {
+  //   return res.render('login');
+  // }
 
 };
 
@@ -129,13 +136,16 @@ exports.mobileNumberProcessForm = function (req, res) {
   let mobileNumber = req.body.mobileNumber;
 
   if (!mobileNumber) {
-    return res.render('login', {
+    return renderWithClient('login', {
       error: 'Mobile Number is required'
+    })(req, res, function () {
+      console.log('hello');
     });
   }
 
   mobileNumber = mobileNumber.replace(/[^\d]/g, '');
 
+  console.log('here');
   return Account(req).findOne({
     mobileNumber: mobileNumber
   })
@@ -145,10 +155,12 @@ exports.mobileNumberProcessForm = function (req, res) {
       if (account) {
         return accountLogin(req, res, account)
           .then((response) => {
-              res.render('confirm', {
+              return renderWithClient('confirm', {
                 mobileNumber: mobileNumber,
                 mobileNumberId: login.accountId,
                 loginId: response.id
+              })(req, res, function () {
+                console.log('after confirm');
               });
             });
       } else {
@@ -156,18 +168,10 @@ exports.mobileNumberProcessForm = function (req, res) {
         //TODO for now just error that mobileNumber incorrect
         // return res.render('error', {text: `The number ${mobileNumber} is not registered`});
 
-        if (req.body.clientId) {
-          Client(req).findById(req.body.clientId)
-            .then(client => {
-              return res.render('register', Object.assign({mobileNumber: req.body.mobileNumber}, {client}));
-            })
-            .catch(err => {
-              return res.render('error', err);
-            })
-          ;
-        } else {
+        renderWithClient('register', {mobileNumber: req.body.mobileNumber})(req, res, function () {
           return res.render('register', {mobileNumber: req.body.mobileNumber});
-        }
+        });
+
       }
 
     }).catch(function (err) {

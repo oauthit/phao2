@@ -33,10 +33,10 @@
 	"SMS code is required": "Нужно ввести код из СМС",
 	"Wrong SMS code": "Указан неправильный код",
 	"SMS code expired": "СМС-код устарел",
-	"Application Authorization": "Аутентификация программы",
-	"The application": "Программа",
-	"is requesting access to your account.": "требует доступа к вашему профилю",
-	"Do you approve?": "Подтверждаете?",
-	"Approve": "Подтверждаю",
-	"Deny": "Отказываюсь"
+	"Application Authorization": "Запрос авторизации",
+	"The application": "Сайт",
+	"is requesting access to your account.": "просит разрешения вас идентифицировать.",
+	"Do you approve?": "Разрешить?",
+	"Approve": "Да, разрешаю",
+	"Deny": "Нет"
 }

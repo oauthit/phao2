@@ -39,10 +39,10 @@ exports.stapi = {
 };
 
 exports.smsTrafficAPI = {
-  login: false,
-  password: false,
-  originator: 'Sistemium',
-  uri: 'https://api.smstraffic.ru/multi.php'
+  login: env.SMS_LOGIN,
+  password: env.SMS_PWD,
+  originator: env.SMS_ORIGIN || 'Sistemium',
+  uri: env.SMS_URI
 };
 
 

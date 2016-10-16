@@ -39,8 +39,8 @@ exports.stapi = {
 };
 
 exports.smsTrafficAPI = {
-  login: 'baros:sistemiumdpt:sistemiumdpt',
-  password: 'fcvuiad93',
+  login: false,
+  password: false,
   originator: 'Sistemium',
   uri: 'https://api.smstraffic.ru/multi.php'
 };

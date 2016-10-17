@@ -11,18 +11,20 @@ block body
     fieldset
       .upper-box
         div
+          if client
+            include _client-header.pug
           h2.title-padding #{__('Register an account')}
           if error
             .subtext.error #{__(error)}
         .pure-control-group
-          label.labels(for='name') #{__('Name')}:
+          label.labels(for='firstName') #{__('Name')}:
           .input-fields
             input#firstName.pure-input-1.input-fields(
             type='text', placeholder=__('FirstName'), name='firstName', autofocus='',
             value=firstName
             )
         .pure-control-group
-          label.labels(for='name') #{__('LastName')}:
+          label.labels(for='lastName') #{__('LastName')}:
           .input-fields
             input#lastName.pure-input-1.input-fields(type='text', placeholder=__('LastName'), name='lastName',
             value=lastName
@@ -37,6 +39,6 @@ block body
             )
       .bottom-box
         .pure-controls.sign-in-button
-          a.pure-button.button-warning(href='/') #{value=__('Cancel')}
+          a.pure-button.button-warning(href='/login') #{value=__('Cancel')}
           span &nbsp;&nbsp;
           button.pure-button.pure-button-primary(type='submit', value=__('Submit')) #{__('Register')}

@@ -140,3 +140,14 @@ pre {
   display: inline;
   margin-right: 5px;
 }
+
+.client-info {
+  display: flex;
+  align-items: center;
+}
+
+.client-info .title {
+  flex: 1;
+  text-align: left;
+  margin-left: 10px;
+}

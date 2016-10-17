@@ -13,8 +13,10 @@ var url = require('url');
 var stapi = require('./../stapi/abstract.model.js');
 var Login = stapi('login');
 var Account = stapi('account');
+var Client = stapi('client');
 var debug = require('debug')('oauth2orize:controller:site');
 var i18n = require('i18n');
+var renderWithClient = require('./../middlewares/renderWithClient.middleware');
 
 exports.index = function (req, res, next) {
   res.redirect('account');
@@ -32,10 +34,27 @@ exports.loginForm = function (req, res) {
   if (!req.session.returnTo) {
     req.session.returnTo = '/account';
   }
-  var url_parts = url.parse(req.session.returnTo, true);
-  var query = url_parts.query;
 
-  return res.render('login', {clientId: query.client_id});
+  renderWithClient('login', {})(req, res, function () {
+    console.log('login');
+    return res.render('login');
+  });
+
+  // var url_parts = url.parse(req.session.returnTo, true);
+  // var query = url_parts.query;
+  //
+  // if (query.client_id) {
+  //   Client(req).findById(query.client_id)
+  //     .then(client => {
+  //       return res.render('login', Object.assign({clientId: query.client_id}, {client}));
+  //     })
+  //     .catch(err => {
+  //       return res.render('error', err);
+  //     })
+  //   ;
+  // } else {
+  //   return res.render('login');
+  // }
 
 };
 
@@ -117,8 +136,10 @@ exports.mobileNumberProcessForm = function (req, res) {
   let mobileNumber = req.body.mobileNumber;
 
   if (!mobileNumber) {
-    return res.render('login', {
+    return renderWithClient('login', {
       error: 'Mobile Number is required'
+    })(req, res, function () {
+      return res.render('login', {error: 'Mobile Number is required'});
     });
   }
 
@@ -133,17 +154,27 @@ exports.mobileNumberProcessForm = function (req, res) {
       if (account) {
         return accountLogin(req, res, account)
           .then((response) => {
-              res.render('confirm', {
+              return renderWithClient('confirm', {
                 mobileNumber: mobileNumber,
                 mobileNumberId: login.accountId,
                 loginId: response.id
+              })(req, res, function () {
+                return res.render('confirm', {
+                  mobileNumber: mobileNumber,
+                  mobileNumberId: login.accountId,
+                  loginId: response.id
+                });
               });
             });
       } else {
 
         //TODO for now just error that mobileNumber incorrect
         // return res.render('error', {text: `The number ${mobileNumber} is not registered`});
-        return res.render('register', {mobileNumber: req.body.mobileNumber});
+
+        renderWithClient('register', {mobileNumber: req.body.mobileNumber})(req, res, function () {
+          return res.render('register', {mobileNumber: req.body.mobileNumber});
+        });
+
       }
 
     }).catch(function (err) {
@@ -169,11 +200,18 @@ exports.registerProcessForm = function (req, res) {
   }
 
   if (error) {
-    return res.render('register', {
+    return renderWithClient('register', {
       error,
       mobileNumber,
       lastName,
       firstName
+    })(req, res, function () {
+      return res.render('register', {
+        error,
+        mobileNumber,
+        lastName,
+        firstName
+      });
     });
   }
 
@@ -194,10 +232,16 @@ exports.registerProcessForm = function (req, res) {
 
         console.log(response);
 
-        res.render('confirm', {
+        renderWithClient('confirm', {
           mobileNumber: mobileNumber,
           mobileNumberId: response.accountId,
           loginId: response.id
+        })(req, res, function () {
+          return res.render('confirm', {
+            mobileNumber: mobileNumber,
+            mobileNumberId: response.accountId,
+            loginId: response.id
+          });
         });
 
       });
@@ -213,11 +257,18 @@ exports.registerProcessForm = function (req, res) {
         console.log('registerProcessForm account:', account);
 
         return accountLogin(req, res, account).then((response) => {
-          res.render('confirm', {
+          return renderWithClient('confirm', {
             mobileNumber: mobileNumber,
             mobileNumberId: response.accountId,
             loginId: response.id
+          })(req, res, function () {
+            return res.render('confirm', {
+              mobileNumber: mobileNumber,
+              mobileNumberId: response.accountId,
+              loginId: response.id
+            });
           });
+
         });
 
       }).catch((err) => {
@@ -225,10 +276,16 @@ exports.registerProcessForm = function (req, res) {
         console.error(err);
 
         if (err.text) {
-          return res.render('register', {
+          return renderWithClient('register', {
             mobileNumber: req.body.mobileNumber,
             name: req.body.name,
             error: err.text
+          })(req, res, function () {
+            return res.render('register', {
+              mobileNumber: req.body.mobileNumber,
+              name: req.body.name,
+              error: err.text
+            });
           });
         }
 
@@ -252,11 +309,18 @@ exports.confirmSms = function (req, res, next) {
 
     if (!user) {
       debug('confirmSms !user', errInfo);
-      return res.render('confirm', {
+      return renderWithClient('confirm', {
         mobileNumber: req.body.mobileNumber,
         mobileNumberId: req.body.mobileNumberId,
         loginId: req.body.loginId,
         error: errInfo.text || errInfo.message
+      })(req, res, function () {
+        return res.render('confirm', {
+          mobileNumber: req.body.mobileNumber,
+          mobileNumberId: req.body.mobileNumberId,
+          loginId: req.body.loginId,
+          error: errInfo.text || errInfo.message
+        });
       });
     }
 

@@ -4,23 +4,26 @@ block title
   title App Authorization
   link(rel='stylesheet', type='text/css', href='/stylesheets/dialog-modules.css')
 block body
+
   form.pure-form.pure-form-stacked(action='/dialog/authorize/decision', method='post')
+
     input(name='transaction_id', type='hidden', value=transactionID)
     fieldset
       .upper-box
         div
-          .main-text #{__('Application Authorization')}
+          include _client-header.pug
+          h2 #{__('Application Authorization')}
         .pure-control-group.labels
           p
             span #{__('The application')}
             = ' '
-            b #{client.name}
+            b #{client.title}
             = ' '
             span #{__('is requesting access to your account.')}
           p #{__('Do you approve?')}
       .bottom-box
         .pure-controls.accept-cancel-buttons
           div
-            input#allow.pure-button.pure-button-primary(type='submit', value=__('Approve'))
-            span &nbsp;&nbsp;
             input#deny.pure-button(type='submit', value=__('Deny'), name='cancel')
+            span &nbsp;&nbsp;
+            input#allow.pure-button.pure-button-primary(type='submit', value=__('Approve'))

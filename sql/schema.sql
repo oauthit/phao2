@@ -18,13 +18,15 @@ meta.defineType 'mobile_number:STRING';
 meta.defineType 'email:STRING';
 meta.defineType 'status:MEDIUM';
 meta.defineType 'url:STRING';
+meta.defineType 'logoUrl:STRING';
+meta.defineType 'title:STRING';
 
 meta.defineEntity 'Account',
     ''
 ;
 
 meta.defineEntity 'Client',
-    'name;secret;isTrusted;isDisabled'
+    'name;secret;isTrusted;isDisabled;logoUrl;title'
 ;
 
 meta.defineEntity 'Login',

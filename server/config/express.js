@@ -8,8 +8,8 @@ var passport = require('passport');
 // internalization
 var i18n = require('i18n');
 i18n.configure({
-  locales: ['en', 'ru'],
-  defaultLocale: 'ru',
+  locales: ['en', 'ru', 'lt'],
+  defaultLocale: config.LANGUAGE,
   directory: __dirname + '/locales',
   register: global
 });

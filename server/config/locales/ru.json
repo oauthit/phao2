@@ -1,6 +1,4 @@
 {
-	"Hello World": "Здравствуй, мир!",
-	"Hello": "Привет",
 	"Mobile Number": "Мобильный номер",
 	"SMS Authorization": "СМС авторизация",
 	"Send code": "Выслать код",
@@ -38,5 +36,6 @@
 	"is requesting access to your account.": "просит разрешения вас идентифицировать.",
 	"Do you approve?": "Разрешить?",
 	"Approve": "Да, разрешаю",
-	"Deny": "Нет"
+	"Deny": "Нет",
+	"Column 'email' in table 'Account' cannot be NULL": "Column 'email' in table 'Account' cannot be NULL"
 }

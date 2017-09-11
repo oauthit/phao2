@@ -19,7 +19,7 @@ meta.defineType 'expiresAt:TS';
 meta.defineType 'attempts:INT,1';
 meta.defineType 'scope:STRING';
 meta.defineType 'mobileNumber:CODE';
-meta.defineType 'email:STRING';
+meta.defineType 'email:STRING,,nullable';
 meta.defineType 'status:MEDIUM';
 meta.defineType 'url:STRING';
 meta.defineType 'logoUrl:STRING';

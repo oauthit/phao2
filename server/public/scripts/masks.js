@@ -2,7 +2,7 @@
 
   $(function($){
 
-    // TODO: unhardcode mask choise 
+    // TODO: unhardcode mask choise
 
     // lt
     $("#mobileNumber").mask("+370 (999) 99-999");

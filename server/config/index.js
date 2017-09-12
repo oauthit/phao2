@@ -2,6 +2,7 @@
 'use strict';
 
 const env = process.env;
+const AWS = require('aws-sdk');
 
 //
 // The configuration options of the server
@@ -45,6 +46,25 @@ exports.smsTrafficAPI = {
   uri: env.SMS_URI
 };
 
+exports.aws = (() => {
+
+  if (!env.AWS_LOGIN || !env.AWS_PASSWORD || !env.AWS_REGION){
+    return {
+      configured: false
+    };
+  }
+
+  AWS.config.update({
+    accessKeyId: env.AWS_LOGIN,
+    secretAccessKey: env.AWS_PASSWORD,
+    region: env.AWS_REGION
+  });
+
+  return {
+    configured: true
+  };
+
+})();
 
 exports.express = {
   port: env.PORT || 3000

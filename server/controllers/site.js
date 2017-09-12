@@ -13,6 +13,8 @@ const Login = stapi('login');
 const Account = stapi('account');
 const debug = require('debug')('oauth2orize:controller:site');
 const renderWithClient = require('./../middlewares/renderWithClient.middleware');
+const AWS = require('aws-sdk');
+const sns = new AWS.SNS();
 
 exports.index = function (req, res, next) {
   res.redirect('account');
@@ -55,7 +57,37 @@ exports.loginForm = function (req, res) {
 };
 
 function sendSms(req, smsCode) {
-  let options = {
+
+  if (config.aws.configured){
+
+    return new Promise(function (resolve, reject){
+
+      const options = {
+        Message: String(smsCode),
+        MessageStructure: 'string',
+        PhoneNumber: req.body.mobileNumber,
+        MessageAttributes:{
+          'AWS.SNS.SMS.SenderID': {
+            'DataType': 'String',
+            'StringValue': config.smsTrafficAPI.originator
+          }
+        }
+      };
+
+      sns.publish(options, function(err, data) {
+        if (err) {
+          reject(err);
+        }
+        else {
+          resolve(data);
+        }
+      });
+
+    });
+
+  }
+
+  const options = {
     method: 'POST',
     uri: config.smsTrafficAPI.uri,
     form: {
@@ -72,6 +104,7 @@ function sendSms(req, smsCode) {
   };
 
   return rp(options);
+
 }
 
 function saveLogin(req, res, login) {

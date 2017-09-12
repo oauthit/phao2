@@ -7,6 +7,7 @@
     "url": "https://github.com/FrankHassanabad/Oauth2orizeRecipes.git"
   },
   "dependencies": {
+    "aws-sdk": "^2.113.0",
     "body-parser": "^1.15.2",
     "connect-ensure-login": "0.1.x",
     "connect-redis": "^3.1.0",

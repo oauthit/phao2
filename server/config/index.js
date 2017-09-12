@@ -1,7 +1,7 @@
 /*jslint node: true */
 'use strict';
 
-var env = process.env;
+const env = process.env;
 
 //
 // The configuration options of the server

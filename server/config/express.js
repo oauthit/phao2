@@ -1,12 +1,12 @@
 /*jslint node: true */
 'use strict';
 
-var config = require('../config/index');
-var express = require('express');
-var passport = require('passport');
+const config = require('../config/index');
+const express = require('express');
+const passport = require('passport');
 
 // internalization
-var i18n = require('i18n');
+const i18n = require('i18n');
 
 i18n.configure({
   locales: ['en', 'ru', 'lt'],
@@ -18,28 +18,25 @@ i18n.configure({
 // application wide locale
 i18n.setLocale(config.language);
 
-var http = require('http');
-var bodyParser = require('body-parser');
-//var cookieParser = require('cookie-parser');
-var fs = require('fs');
-var expressSession = require('express-session');
-var path = require('path');
+const bodyParser = require('body-parser');
+const expressSession = require('express-session');
+const path = require('path');
 
 export default function (app) {
 
-  var sessionStorage;
+  let sessionStorage;
 
   if (config.session.type === 'MemoryStore') {
 
-    var MemoryStore = expressSession.MemoryStore;
+    const MemoryStore = expressSession.MemoryStore;
 
     console.log('Using MemoryStore for the Session');
     sessionStorage = new MemoryStore();
 
   } else if (config.session.type === 'RedisStore') {
 
-    var RedisStore = require('connect-redis')(expressSession);
-    var redisConfig = config.redis;
+    const RedisStore = require('connect-redis')(expressSession);
+    const redisConfig = config.redis;
     console.log('Using RedisStore for the Session');
     sessionStorage = new RedisStore(redisConfig);
 
@@ -50,7 +47,7 @@ export default function (app) {
 
 
 // Express configuration
-  var env = app.get('env');
+
   config.root = path.normalize(__dirname + '/../..');
 
   app.set('views', config.root + '/server/views');

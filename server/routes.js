@@ -1,20 +1,21 @@
+'use strict';
+
 /**
  * Main application routes
  */
 
-var user = require('./controllers/user');
-var client = require('./controllers/client');
-var token = require('./controllers/token');
-var site = require('./controllers/site');
-var oauth2 = require('./oauth2');
+const user = require('./controllers/user');
+const client = require('./controllers/client');
+const token = require('./controllers/token');
+const site = require('./controllers/site');
 
-'use strict';
-
+import oauth2 from './oauth2';
 import errors from './components/errors';
-import path from 'path';
 
-export default function(app) {
-  // Insert routes below
+export default routes;
+
+function routes (app) {
+
   app.get('/', site.index);
   app.get('/login', site.loginForm);
   app.post('/mobileNumberProcessForm', site.mobileNumberProcessForm);

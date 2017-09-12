@@ -4,19 +4,15 @@
 
 //TODO Document all of this
 
-var passport = require('passport');
-var login = require('connect-ensure-login');
-var rp = require('request-promise');
-var config = require('./../config/index');
-var querystring = require('querystring');
-var url = require('url');
-var stapi = require('./../stapi/abstract.model.js');
-var Login = stapi('login');
-var Account = stapi('account');
-var Client = stapi('client');
-var debug = require('debug')('oauth2orize:controller:site');
-var i18n = require('i18n');
-var renderWithClient = require('./../middlewares/renderWithClient.middleware');
+const passport = require('passport');
+const login = require('connect-ensure-login');
+const rp = require('request-promise');
+const config = require('./../config/index');
+const stapi = require('./../stapi/abstract.model.js');
+const Login = stapi('login');
+const Account = stapi('account');
+const debug = require('debug')('oauth2orize:controller:site');
+const renderWithClient = require('./../middlewares/renderWithClient.middleware');
 
 exports.index = function (req, res, next) {
   res.redirect('account');

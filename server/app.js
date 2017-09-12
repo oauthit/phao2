@@ -1,10 +1,9 @@
 /*jslint node: true */
 'use strict';
 
-var config = require('./config/index');
-var express = require('express');
-var http = require('http');
-var fs = require('fs');
+const config = require('./config/index');
+const express = require('express');
+const http = require('http');
 
 import debug from 'debug';
 debug.log = console.info.bind(console);
@@ -14,9 +13,12 @@ debug.log = console.info.bind(console);
 require('./auth');
 
 // Express configuration
-var app = express();
+const app = express();
 require('./config/express')(app);
-require('./routes')(app);
+
+import routes from './routes';
+
+routes(app);
 
 //From time to time we need to clean up any expired tokens
 //in the database

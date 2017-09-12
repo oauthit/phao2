@@ -194,7 +194,7 @@ exports.registerProcessForm = function (req, res) {
   if (!mobileNumber) {
     error = 'Mobile Number is required';
   } else if (!firstName) {
-    error = 'Fisrt Name is required';
+    error = 'First Name is required';
   } else if (!lastName) {
     error = 'Last Name is required';
   }

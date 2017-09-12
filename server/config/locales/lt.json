@@ -34,5 +34,7 @@
 	"is requesting access to your account.": "prašo prieigos prie jūsų paskyros.",
 	"Do you approve?": "Ar jūs sutinkate?",
 	"Deny": "Atmesti",
-	"Approve": "Leisti"
+	"Approve": "Leisti",
+	"Authorization Error": "Authorizacijos klaida",
+	"Go to login": "Go to login"
 }

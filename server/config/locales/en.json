@@ -28,5 +28,6 @@
   "Mobile Number is required": "Mobile Number is required",
   "SMS code is required": "SMS code is required",
   "Wrong SMS code": "Wrong SMS code",
-  "SMS code expired": "SMS code is expired"
+  "SMS code expired": "SMS code is expired",
+  "Phone Mask": "+99999999999"
 }

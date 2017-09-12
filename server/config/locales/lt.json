@@ -36,5 +36,6 @@
 	"Deny": "Atmesti",
 	"Approve": "Leisti",
 	"Authorization Error": "Authorizacijos klaida",
-	"Go to login": "Go to login"
+	"Go to login": "Go to login",
+	"Phone Mask": "+370 (999) 99-999"
 }

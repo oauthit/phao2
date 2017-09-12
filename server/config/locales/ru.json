@@ -37,5 +37,6 @@
 	"Do you approve?": "Разрешить?",
 	"Approve": "Да, разрешаю",
 	"Deny": "Нет",
-	"Column 'email' in table 'Account' cannot be NULL": "Column 'email' in table 'Account' cannot be NULL"
+	"Column 'email' in table 'Account' cannot be NULL": "Column 'email' in table 'Account' cannot be NULL",
+  "Phone Mask": "+7 (999) 999-99-99"
 }

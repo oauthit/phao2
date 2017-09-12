@@ -4,20 +4,20 @@
 /**
  * Module dependencies.
  */
-var oauth2orize = require('oauth2orize');
-var passport = require('passport');
-var login = require('connect-ensure-login');
-var config = require('../config/index');
-var utils = require('../utils');
-var debug = require('debug')('oauth2orize:authorization-server/oauth2');
-var stapi = require('../stapi/abstract.model.js');
-var AccessToken = stapi('accessToken');
-var RefreshToken = stapi('refreshToken');
-var AuthCode = stapi('authCode');
-var Client = stapi('client');
+const oauth2orize = require('oauth2orize');
+const passport = require('passport');
+const login = require('connect-ensure-login');
+const config = require('../config/index');
+const utils = require('../utils');
+const debug = require('debug')('oauth2orize:authorization-server/oauth2');
+const stapi = require('../stapi/abstract.model.js');
+const AccessToken = stapi('accessToken');
+const RefreshToken = stapi('refreshToken');
+const AuthCode = stapi('authCode');
+const Client = stapi('client');
 
 // create OAuth 2.0 server
-var server = oauth2orize.createServer();
+const server = oauth2orize.createServer();
 
 // Register supported grant types.
 //
@@ -36,7 +36,7 @@ var server = oauth2orize.createServer();
  * which is bound to these values, and will be exchanged for an access token.
  */
 server.grant(oauth2orize.grant.code(function (client, redirectURI, user, ares, done) {
-  var code = utils.uid(config.token.authorizationCodeLength);
+  const code = utils.uid(config.token.authorizationCodeLength);
   debug('grant code:', client, user, ares);
   AuthCode().save({
       code: code,
@@ -94,7 +94,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
           // authorization code
           return done(null, false);
         }
-        var token = utils.uid(config.token.accessTokenLength);
+        const token = utils.uid(config.token.accessTokenLength);
 
         //TODO save scope for access token?
         AccessToken().save({
@@ -104,7 +104,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectURI, d
           expirationDate: config.token.calculateExpirationDate(),
           authCodeId: authCode.id
         }).then(function (accessToken) {
-          var refreshToken = null;
+          let refreshToken = null;
           //I mimic openid connect's offline scope to determine if we send
           //a refresh token or not
 

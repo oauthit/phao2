@@ -1,20 +1,20 @@
 'use strict';
-var request = require('request');
-var _ = require('lodash');
-var debug = require('debug')('oauth2orize:abstract.model');
-var uuid = require('node-uuid');
-var config = require('../config/index');
+const request = require('request');
+const _ = require('lodash');
+const debug = require('debug')('oauth2orize:abstract.model');
+const uuid = require('node-uuid');
+const config = require('../config/index');
 
 function model(name) {
 
-  var collectionUrl = config.stapi.url + name;
+  const collectionUrl = config.stapi.url + name;
 
   return function () {
 
     function find(options) {
       return new Promise(function (resolve, reject) {
 
-        var url = collectionUrl;
+        let url = collectionUrl;
 
         if (typeof options === 'string') {
           url += '/' + options;
@@ -79,7 +79,7 @@ function model(name) {
           json: body
         }, function (err, res, json) {
           debug('save', res.statusCode, json);
-          var e = err;
+          let e = err;
 
           if (!e && [200,201].indexOf(res.statusCode) < 0) {
             e = json || `Error saving "${name}"`;
@@ -114,7 +114,7 @@ function model(name) {
     function deleteById(id) {
       return new Promise(function (resolve, reject) {
 
-        var url = collectionUrl + '/' + id;
+        const url = collectionUrl + '/' + id;
 
         request.del({
           url: url,
@@ -135,7 +135,7 @@ function model(name) {
     function update(id, body) {
       return new Promise(function (resolve, reject) {
 
-        var url = collectionUrl + '/' + id;
+        const url = collectionUrl + '/' + id;
 
         request.put({
           url: url,

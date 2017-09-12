@@ -1,16 +1,16 @@
 /*jslint node: true */
 'use strict';
 
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy;
-var BearerStrategy = require('passport-http-bearer').Strategy;
-var debug = require('debug')('oauth2orize:authorization-server/auth');
-var stapi = require('../stapi/abstract.model.js');
-var Account = stapi('account');
-var Login = stapi('login');
-var Client = stapi('client');
-var AccessToken = stapi('accessToken');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy;
+const BearerStrategy = require('passport-http-bearer').Strategy;
+const debug = require('debug')('oauth2orize:authorization-server/auth');
+const stapi = require('../stapi/abstract.model.js');
+const Account = stapi('account');
+const Login = stapi('login');
+const Client = stapi('client');
+const AccessToken = stapi('accessToken');
 
 /**
  * LocalStrategy

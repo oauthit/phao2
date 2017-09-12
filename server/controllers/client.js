@@ -2,7 +2,7 @@
 /*global exports */
 'use strict';
 
-var passport = require('passport');
+const passport = require('passport');
 
 exports.info = [
   passport.authenticate('bearer', {session: false}),

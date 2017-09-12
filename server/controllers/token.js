@@ -2,11 +2,10 @@
 /*global exports */
 'use strict';
 
-var config = require('./../config/index');
-var stapi = require('../stapi/abstract.model.js');
-var AccessToken = stapi('accessToken');
-var Client = stapi('client');
-var debug = require('debug')('oauth2orize:controllers:token');
+const stapi = require('../stapi/abstract.model.js');
+const AccessToken = stapi('accessToken');
+const Client = stapi('client');
+const debug = require('debug')('oauth2orize:controllers:token');
 
 /**
  * This endpoint is for verifying a token.  This has the same signature to

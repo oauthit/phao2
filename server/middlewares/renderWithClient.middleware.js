@@ -1,14 +1,14 @@
 'use strict';
 
-var stapi = require('./../stapi/abstract.model');
-var url = require('url');
-var Client = stapi('client');
+const stapi = require('./../stapi/abstract.model');
+const url = require('url');
+const Client = stapi('client');
 
 module.exports = function (viewName, params) {
   return function (req, res, next) {
 
-    var url_parts = url.parse(req.session.returnTo, true);
-    var query = url_parts.query;
+    const url_parts = url.parse(req.session.returnTo, true);
+    const query = url_parts.query;
 
     if (query.client_id || req.body.clientId) {
 
@@ -31,8 +31,7 @@ module.exports = function (viewName, params) {
           })
           .catch(err => {
             return res.render('error', err);
-          })
-        ;
+          });
       }
     } else {
       console.log('next called...');

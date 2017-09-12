@@ -45,8 +45,8 @@ exports.info = [
               res.json({error: 'invalid_token'});
             } else {
               if (token.expirationDate) {
-                var expirationDate = new Date(token.expirationDate + 'Z');
-                var expirationLeft = Math.floor((expirationDate.getTime() - new Date().getTime()) / 1000);
+                const expirationDate = new Date(token.expirationDate + 'Z');
+                const expirationLeft = Math.floor((expirationDate.getTime() - new Date().getTime()) / 1000);
                 if (expirationLeft <= 0) {
                   res.json({error: 'invalid_token'});
                 } else {

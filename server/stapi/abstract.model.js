@@ -61,7 +61,7 @@ function model(name) {
       return new Promise(function (resolve, reject) {
 
         find(options).then(function (reply) {
-          var data = reply && reply.length && reply[0] || false;
+          const data = reply && reply.length && reply[0] || false;
           resolve(data);
         }, reject);
 
@@ -157,7 +157,7 @@ function model(name) {
     function patch(id, body) {
 
       return new Promise(function (resolve, reject) {
-        var url = collectionUrl + '/' + id;
+        const url = collectionUrl + '/' + id;
 
         //debug ('patch authorization:',req.headers);
 

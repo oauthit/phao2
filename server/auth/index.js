@@ -134,7 +134,7 @@ passport.use(new BearerStrategy(
               }
               // to keep this example simple, restricted scopes are not implemented,
               // and this is just for illustrative purposes
-              var info = {scope: '*'};
+              const info = {scope: '*'};
               return done(null, user, info);
             })
             .catch(function (err) {
@@ -152,7 +152,7 @@ passport.use(new BearerStrategy(
               }
               // to keep this example simple, restricted scopes are not implemented,
               // and this is just for illustrative purposes
-              var info = {scope: '*'};
+              const info = {scope: '*'};
               return done(null, client, info);
             })
             .catch(function (err) {
